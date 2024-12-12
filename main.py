@@ -507,11 +507,8 @@ def pr(x,y):
     dx=0#p.x-50
     dy=0#p.y-50
     # move(1,1)
-    x2=int(x/20)*20
-    y2=int(y/10)*10
-    yx=min(y2+10,len(mp.bit))
-    for i in range(y2,yx):
-        for j in range(x2,min(x2+20,len(mp.bit[i]))):
+    for i in range(len(mp.bit)):
+        for j in range(len(mp.bit[i])):#x2,min(x2+20,len(mp.bit[i]))):
             tp=mp.bit[i][j]
             aired=tp in[0,1,8,10] or (i>0 and mp.bit[i-1][j]in[0,1,8]) or (i<len(mp.bit)-1 and mp.bit[i+1][j]in[0,1,8]) or (j>0 and mp.bit[i][j-1]in[0,1,8]) or (j<len(mp.bit[i])-1 and mp.bit[i][j+1]in[0,1,8])
             if aired:
@@ -560,6 +557,7 @@ def texter():
         print("")
 dev=False
 up,right,down,left,save,w,a,s,d,place,brek,inv,open=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
+po=["",time.time()]
 while True:
         scrn.fill((255,255,255))
         for i in pygame.event.get():
@@ -573,18 +571,22 @@ while True:
             #     br.ys+=1
         keys=pygame.key.get_pressed()
         do=""
-        if keys[up]or keys[w]:
-            do="z"
-        elif keys[right]or keys[d]:
-            do="x"
-        elif keys[down]or keys[s]:
-            do="c"
-        elif keys[left]or keys[a]:
-            do="v"
+        if time.time()-po[1]>0.1:
+            if keys[up]or keys[w]:
+                do="z"
+            elif keys[right]or keys[d]:
+                do="x"
+            elif keys[down]or keys[s]:
+                do="c"
+            elif keys[left]or keys[a]:
+                do="v"
+            if do==po[0] and po[0]!="" and time.time()-po[1]<1:
+                do="b"
+            po=[do,time.time()]
         p.mover(do)
         # print(do)
         # sleep(0.1)
-        clk.tick(10)
+        clk.tick(60)
         pr(p.x,p.y)
         scrn.blit(font.render(f"{do},", True, (255, 255, 255)),(0,0))
         pygame.display.flip()
