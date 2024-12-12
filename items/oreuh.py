@@ -12,7 +12,7 @@ from random import choice,randint
 # from itemuh import *
 from time import sleep,time
 class brck:
-    def __init__(self,nm,disp,sprd,num,pronc,mnLvl,col=""):#name,what is displayed,the spread of a section, the id/num of place in nts list, how to pronounce,what level it takes to mine
+    def __init__(self,nm,disp,sprd,num,pronc,mnLvl,col=(0,0,0)):#name,what is displayed,the spread of a section, the id/num of place in nts list, how to pronounce,what level it takes to mine
         self.nm=nm
         self.txt=disp
         self.spr=sprd
@@ -69,7 +69,7 @@ class dirt52(brck):
     pass
 class chest52(brck):
     def __init__(self,nm,disp,sprd,num,pronc,mnLvl,roleth):
-        super().__init__(nm,disp,sprd,num,pronc,mnLvl,col="\033[48;2;119;69;19m")
+        super().__init__(nm,disp,sprd,num,pronc,mnLvl,col=(119,69,19))
         self.holds=[
             [itm(dirt,10),itm(void,0),itm(void,0),],
             [itm(void,0),itm(void,0),itm(void,0),],
@@ -207,17 +207,17 @@ class chest52(brck):
     def brek(self,p):
         pass
 no_rock=no_rock52("no_rock"," ",10,0,"air",0)
-placed_rock=placed_rock52("placed_rock","_",0,1,"placed rock",1,col="\033[48;2;211;211;211m")
-rock=rock52("rock","%",-1,2,"rock",1,col="\033[48;2;100;100;100m")#◻
-dark_rock=dark_rock52("dark_rock","$",2,3,"dark rock",2,col="\033[48;2;27;27;27m")#█
-charium_ore=charium_ore52("charium_ore","=",7,4,"ch-arh-ee-um ore",3,col="\033[48;2;0;100;0m")#≈
-nevelium_ore=nevelium_ore52("nevelium_ore","o",5,5,"neh-vel-ee-um ore",3,col="\033[48;2;0;0;139m")#
-decante_ore=decante_ore52("decante_ore","⋇",3,6,"dee-cant ore",4,col="\033[48;2;128;128;0m")
-charcor_ore=charcor_ore52("charcor_ore","&",10,7,"ch-arh-kor ore",1,col="\033[48;2;139;0;0m")#◘
+placed_rock=placed_rock52("placed_rock","_",0,1,"placed rock",1,col=(211,211,211))
+rock=rock52("rock","%",-1,2,"rock",1,col=(100,100,100))#◻
+dark_rock=dark_rock52("dark_rock","$",2,3,"dark rock",2,col=(27,27,27))#█
+charium_ore=charium_ore52("charium_ore","=",7,4,"ch-arh-ee-um ore",3,col=(0,100,0))#≈
+nevelium_ore=nevelium_ore52("nevelium_ore","o",5,5,"neh-vel-ee-um ore",3,col=(0,0,139))#
+decante_ore=decante_ore52("decante_ore","⋇",3,6,"dee-cant ore",4,col=(128,128,0))
+charcor_ore=charcor_ore52("charcor_ore","&",10,7,"ch-arh-kor ore",1,col=(139,0,0))#◘
 #"\033[48;2;red;green;bluem"
-void=brck("void"," ",0,8," ",1234567890,col="\033[48;2;0;0;0m")
+void=brck("void"," ",0,8," ",1234567890,col=(0,0,0))
 
-dirt=dirt52("dirt","@",15,9,"dirt",0,col="\033[48;2;88;57;39m")
+dirt=dirt52("dirt","@",15,9,"dirt",0,col=(88,57,39))
 
 chest=chest52("chest","C",1,10,"chest",0,[])
 nts=[no_rock,placed_rock,rock,dark_rock,charium_ore,nevelium_ore,decante_ore,charcor_ore,void,dirt,chest]

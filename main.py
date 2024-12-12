@@ -16,9 +16,6 @@ scrn = pygame.display.set_mode((X, Y))
 clk=pygame.time.Clock()
 font = pygame.font.SysFont(None, 50)
 
-# for i in nts:
-#     i.stat()
-# input()
 class mos:
     def __init__(self,ck):
         self.ix=0
@@ -209,41 +206,22 @@ class MP:
         self.mh+=1
         self.tl.y+=1
         self.mp.append([tiles() for i in range(self.mw)])
-        # self.mh+=1
-        # plr.y+=1
-        # self.mp.insert([-1 for i in range(self.mw)],0)
-        # for i in range(self.mw):
-        #     self.gen(i,0)
     #add to the map on the right
     def addRgt(self):
         self.mw+=1
         for i in range(self.mh):
             self.mp[i].append(tiles())
         self.mw+=1
-        # for i in range(self.mh):
-        #     self.mp[i].append(-1)
-        # for i in range(self.mh):
-        #     self.gen(self.mw-1,i)
     #add to the map on bottom
     def addDwn(self):
         self.mh+=1
         self.mp.append([tiles() for i in range(self.mw)])
-        # self.mh+=1
-        # self.mp.append([-1 for i in range(self.mw)])
-        # for i in range(self.mw):
-        #     self.gen(i,self.mh-1)
     #add to the map on the left
     def addLft(self):
         self.mw+=1
         self.tl.x+=1
         for i in range(self.mh):
             self.mp[i].insert(0,tiles())
-        # self.mw+=1
-        # plr.x+=1
-        # for i in range(self.mh):
-        #     self.mp[i].append(-1)
-        # for i in range(self.mh):
-        #     self.gen(self.mw-1,i)
     #Do all the adds
     def addOn(self,dirr):
         if dirr==0:
@@ -260,12 +238,6 @@ class MP:
         print(dirr,self.tl)
     #not needed, would expand the map. idk if well finish and add
     def exp(self):
-        # exp=[]
-        # for i in range(self.mh*2):
-        #     exp.append([])
-        #     for j in range(self.mw*2):
-        #         exp[-1].append(-1)
-        # self.mp=exp.copy()
         #we want every top of the tiles across
         #then next, than next and so on till the bottom
         self.bit=[]
@@ -280,11 +252,7 @@ class MP:
         bit2=[]
         for i in self.bit:
             bit2.append([])
-            # print(i)
             for j in i:
-                # print(j)
-                # for k in j:
-                # print(k)
                 bit2[-1]+=j
         self.bit=bit2.copy()
     def datar(self):
@@ -292,20 +260,11 @@ class MP:
             for b,j in enumerate(i):
                 if j==10:
                     self.data[f"{b},{a}"]=chest52("chest","C",1,10,"chest",0,roll())
-        #             print(f"{b},{a}")
-        # input()
     #runs the save code for JUST THE MAP, must be implemetned with the player and entity save codes!
     def save(self):
         return str(self.mp),str(self.mw),str(self.mh)
     def getTile(self):
         return self.mp[self.tl.y][self.tl.x]
-# print("   |")
-# print("   |")
-# print("   |")
-# for i in range(3):
-#     for j in range(3):
-#         move(i+1,j)
-#         print(i)
 dubloons=False
 class plr:
     def __init__(self):
@@ -319,23 +278,8 @@ class plr:
         self.hold=[
             [itm(rock,5),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
             [itm(pick,1),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],]
-        #exli(exli(itm(void,0),5),5)
     def dr(self,ox,oy):
-        # [oy][ox]
-        move((ox)%10+1,(oy)%10+1)
-        print(no_rock)
-        if dubloons:
-            move(((self.x)%10)*2+1,((self.y)%10)*2+1)
-            print(self.us[self.dir]*2)
-            move(((self.x)%10)*2+1,((self.y)%10+1)*2)
-            print(self.us[self.dir]*2)
-        else:
-            move(((self.x)%10)+1,((self.y)%10)+1)
-            print("\033[48;2;101;175;184m"+self.us[self.dir]+"\033[0m")
-        # move(0,13)
-        # print("\033[48;5;240m")
-        for b,j in enumerate(self.hold[5]):
-            prat(("\033[48;5;240m"if b==self.hl else"")+"|"+str(j)+("\033[0m"if b==self.hl else""),(b)*16+1,11)
+        rect(self.x*10,self.y*10,10,10,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
     def move(self,d):
         global mp
         if d=="b":
@@ -345,9 +289,6 @@ class plr:
             mp.getTile().bit[ny][nx]=0
             move(nx+1,ny+1)
             print(no_rock)
-            # move(0,10)
-            # print("\n\n",self.dir,dr,self.x,self.y,nx,ny)
-            # return
         elif d=="z":
             self.dir=0
         elif d=="x":
@@ -362,8 +303,6 @@ class plr:
         tk=0
         if dx>=0 and dx<=9 and dy>=0 and dy<=9:
             tk=mp.getTile().bit[dy][dx]
-        # move(0,11)
-        # print(tk,gd(self.dir),self.dir," "*10)
         if tk==0:
             self.x,self.y=dx,dy
         self.dr(ox,oy)
@@ -393,10 +332,6 @@ class plr:
         global mp
         if d.isdigit() and inr(int(d)-1,0,5):
             self.hl=int(d)-1
-            # print(self.hl)
-            # self.y=0 if self.y+mv[1]<0 else(len(mp.bit)-2 if self.y+mv[1]>=len(mp.bit)-1 else self.y)
-            # self.x=0 if self.x+mv[0]<0 else(len(mp.bit[self.y+mv[1]])-2 if self.x+mv[0]>=len(mp.bit[self.y+mv[1]])-1 else self.x)
-            # self.dr(self.x,self.y)
             return
         elif d=="]":
             return
@@ -406,8 +341,7 @@ class plr:
             self.prInv()
             return
         elif d=="o":
-            # sleep(0.5)
-            keyboard.send("backspace")
+            # keyboard.send("backspace")
             mv=gd(self.dir)
             if self.y+mv[1]<0 or self.y+mv[1]>len(mp.bit)-1:
                 return
@@ -462,10 +396,6 @@ class plr:
         if drw:
             pr(self.x,self.y)
     def prInv(self):
-        # for i in self.hold:new
-        #     for j in i:
-        #         print(j)
-        # intput()
         keyboard.send("backspace")
         while True:
             print("\033c")
@@ -509,7 +439,6 @@ class plr:
     def addItm(self,item):
         if not isinstance(item,itm):
             item=itm(item,1)
-        # print(repr(item))
         if item.tp.idd==0:
             return
         for i in range(5,-1,-1):
@@ -531,19 +460,11 @@ class plr:
         return self.hold[5][self.hl]
     def colourify(self,ix,iy):
         cc=repr(self.hold[iy][ix].tp.col)
-        # cc=repr(newcc.col)
-        # print(cc255)
         if cc=="":
             cc=repr("\033[48;2;0;0;0m")
-        # print(cc)
         cc=cc[:-2].split(";")
-        # print(cc)
-        # print(cc[-1],cc[-2],cc[-3])
         g,b,r=int(cc[-1]),int(cc[-2]),int(cc[-3])
         print("\033c",end="")
-        # print("R"+(" "*14)+"B")
-        # print("\n"*14)
-        # print("G")
         px,py=0,0
         ppx,ppy=px,py
         while not True:
@@ -574,79 +495,39 @@ class plr:
             good=intput(f"\033[48;2;{r};{g};{b}mIs this the right color? (y/n)\033[0m")
             if good=="y":
                 break
-        # print(repr(f"\033c[48;2;{r};{g};{b}"))
-        # input("fiz")
         self.hold[iy][ix].tp.col=f"\033c[48;2;{r};{g};{b}"
         print(repr(self.hold[iy][ix].tp.col))
 p=plr()
 
-# p.hold[0][0]=itm(rock,10)
-# p.hold[5][0]=itm(rock,10)
-# p.addItm(itm(rock,2))
-# p.addItm(itm(placed_rock,5))
-# p.prInv()
-# quit()
 mp=MP()
+def rect(x,y,w,h,col=(255,255,255)):
+    # print(col)
+    pygame.draw.rect(scrn, col, pygame.Rect(x, y, w, h))
 def pr(x,y):
-    # print("\033c")
-    move(1,1)
+    dx=0#p.x-50
+    dy=0#p.y-50
+    # move(1,1)
     x2=int(x/20)*20
     y2=int(y/10)*10
-    # yn=max(0,y)
     yx=min(y2+10,len(mp.bit))
     for i in range(y2,yx):
-        # for k in range(2):
         for j in range(x2,min(x2+20,len(mp.bit[i]))):
             tp=mp.bit[i][j]
             aired=tp in[0,1,8,10] or (i>0 and mp.bit[i-1][j]in[0,1,8]) or (i<len(mp.bit)-1 and mp.bit[i+1][j]in[0,1,8]) or (j>0 and mp.bit[i][j-1]in[0,1,8]) or (j<len(mp.bit[i])-1 and mp.bit[i][j+1]in[0,1,8])
-            # move(i+2,j+2)
             if aired:
-                print(str(nts[tp])*(2 if dubloons else 1),end="")
+                rect(j*10-dx,i*10-dy,10,10,nts[tp].col)
             else:
-                print("#"*(2 if dubloons else 1),end="")
-            # sleep(1)
-        # print("|",end="")
-        print("|")
-        if dubloons:
-            for j in range(x2,min(x2+10,len(mp.bit[i]))):
-                tp=mp.bit[i][j]
-                aired=tp in[0,1,8,10] or (i>0 and mp.bit[i-1][j]in[0,1,8]) or (i<len(mp.bit)-1 and mp.bit[i+1][j]in[0,1,8]) or (j>0 and mp.bit[i][j-1]in[0,1,8]) or (j<len(mp.bit[i])-1 and mp.bit[i][j+1]in[0,1,8])
-                # move(i+2,j+2)
-                if aired:
-                    print(str(nts[tp])*2,end="")
-                else:
-                    print("#"*2,end="")
-                # sleep(1)
-            # print("|",end="")
-            print("|")
-    move(1,13)
-    # print(x2,min(x2+10,len(mp.bit[i])-1),y2,yx,len(mp.bit),len(mp.bit[0]),[i for i in range(x2,min(x2+10,len(mp.bit[i])-1))])
-    # print("Drawin")
+                rect(j*10-dx,i*10-dy,10,10,(0,0,0))
+    #DONT DELETE
     p.dr(p.x,p.y)
-    for i in bobs:
-        i.disp((i.y,i.x))
-    # for i in mp.getTile(x,y).bit:
-    #     for j in i:
-    #         print(nts[j],end="")
-    #     print()
-    # print("\033c")
-    # yn=min(max(y-10,0),len(mp.mp)-10)
-    # yx=min(max(y+10,10),len(mp.mp))
-    # for i in range(yn,yx):
-    #     xn=min(max(x-10,0),len(mp.mp[i])-10)
-    #     xx=min(max(x+10,10),len(mp.mp[i]))
-    #     for j in range(xn,xx):
-    #         # print(j)
-    #         print(nts[mp.mp[i][j]],end="")
-    #     print()
+    # for i in bobs:
+    #     i.disp((i.y,i.x))
 def getSave():
     global mp
     b=""
     print("\033c")
     with open("saveus/save.pile","r")as sv:
-        # sv.write(str(mp.bit))
         b=sv.readlines()[0].replace("\n","")
-    # print(b)
     evald=eval(piler.dec(b))
     mp.bit=evald[0]
     p.hold=[[eval(j) for j in i]for i in evald[1]]
@@ -657,23 +538,17 @@ def writSave():
     rs=[[repr(j)for j in i]for i in p.hold]
     with open("saveus/save.pile","w")as sv:
         sv.write(piler.enc([mp.bit,rs,(p.x,p.y)]))#piler.enc
-if intput("Get a new game, or use your old save? (new/old)")=="new":
+if True:#intput("Get a new game, or use your old save? (new/old)")=="new":
     writSave()
 else:
     getSave()
 print("\033c")
-# piler.saver(mp.bit)
 pr(p.x,p.y)
-p.dr(p.x,p.y)
-# dpt=runTimer(10)
-# rkt=runTimer(0)
+# p.dr(p.x,p.y)
 do=""
 fps=calcFrm()
 ts=time.time()
 pk=["" for i in range(10)]
-# def pker(e):
-#     pk.append(e)
-# keyboard.on_press(pker)
 def texter():
     global pk
     pk=["" for i in range(10)]
@@ -684,7 +559,36 @@ def texter():
         prat(pk[-1],len(pk)-9,1)
         print("")
 dev=False
+up,right,down,left,save,w,a,s,d,place,brek,inv,open=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
 while True:
+        scrn.fill((255,255,255))
+        for i in pygame.event.get():
+            if i.type == pygame.QUIT:
+                quit()
+            elif i.type==pygame.KEYDOWN:
+                if i.key==pygame.K_SPACE:
+                    kd=True
+            #DONT DELETE
+            # if i.key==py.K_LSHIFT:# and br.ys<3:
+            #     br.ys+=1
+        keys=pygame.key.get_pressed()
+        do=""
+        if keys[up]or keys[w]:
+            do="z"
+        elif keys[right]or keys[d]:
+            do="x"
+        elif keys[down]or keys[s]:
+            do="c"
+        elif keys[left]or keys[a]:
+            do="v"
+        p.mover(do)
+        # print(do)
+        # sleep(0.1)
+        clk.tick(10)
+        pr(p.x,p.y)
+        scrn.blit(font.render(f"{do},", True, (255, 255, 255)),(0,0))
+        pygame.display.flip()
+while not True:
     fps.run()
     prat("fps: "+str(fps.getCur())+"          ",1,12)
     # if dpt.run():
@@ -702,11 +606,7 @@ while True:
     #o-open chest
     prat("Use arrow keys and wasd  to move. \"i\" to open your inventory. \"o\" to open the chest in front of you. \"u\" to save. \"b\" breaks the block in front of you, along with holding down an arrow key. Use number keys 1-5 to change your selected hotbar. \"p\" places the current selected block in front of you. \"o\" opens a chest in front of you.",1,13)
     print(m)
-    do=keyboard.read_key()#input("u-up,r-right,d-down,l-left,b-break,i-inventory,1-5-held,p-place")
-    # if pk[-1]=="a" and pk[-2]=="t" and pk[-3]=="a" and pk[-4]=="c":
-    #     for i in nts:
-    #         print(i.stat())
-    #     continue
+    do=keyboard.read_key()
     if do=="":
         continue
     if do=="t":
