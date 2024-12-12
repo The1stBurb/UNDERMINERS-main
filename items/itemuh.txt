@@ -1,0 +1,106 @@
+# from base_funcs import itm
+# from oreuh import *
+#nm,idd
+class bify:
+    def __init__(self,itms,ams):
+        self.itms=itms
+        self.ams=ams
+        self.nd=[]
+class held:
+    def __init__(self,nm,idd2,ms,dmg,bfy=[["","","",{}]]):#name of, id of,mine strength, attack damage
+        self.nm,self.idd,self.id,self.ms,self.dmg=nm,-1,idd2,ms,dmg
+    def __str__(self):
+        return self.nm
+    def __repr__(self):
+        return self.nm
+    def crafty(self):
+        print(self.nm)
+        for i in self.bfy:
+            print(" ",i)
+class pick52(held):
+    def __init__(self,nm,idd2,ms,dmg):
+        super().__init__(nm,idd2,ms,dmg)
+        self.bfy=[itm(rock,5)]
+        #rrr
+        # r
+        # r
+    # def __init__(idd2,ms):
+class charcor_pick52(held):
+    def __init__(self, nm, idd2, ms, dmg):
+        super().__init__(nm, idd2, ms, dmg)
+        self.bfy=[itm(charcor_ore,3),itm(rock,2)]
+class charium_pick52(held):
+    def __init__(self, nm, idd2, ms, dmg):
+        super().__init__(nm, idd2, ms, dmg)
+        self.bfy=[itm(charium_ore,3),itm(rock,2)]
+class nevelium_pick52(held):
+    def __init__(self, nm, idd2, ms, dmg):
+        super().__init__(nm, idd2, ms, dmg)
+        self.bfy=[itm(nevelium_ore,3),itm(rock,2)]
+class sword52(held):
+    def __init__(self, nm, idd2, ms, dmg):
+        super().__init__(nm, idd2, ms, dmg)
+        self.bfy=[itm(rock,3)]
+class charcor_sword52(held):
+    def __init__(self, nm, idd2, ms, dmg):
+        super().__init__(nm, idd2, ms, dmg)
+        self.bfy=[itm(charcor_ore,2),itm(rock,1)]
+class charium_sword52(held):
+    def __init__(self, nm, idd2, ms, dmg):
+        super().__init__(nm, idd2, ms, dmg)
+        self.bfy=[itm(charium_ore,2),itm(rock,1)]
+class nevelium_sword52(held):
+    def __init__(self, nm, idd2, ms, dmg):
+        super().__init__(nm, idd2, ms, dmg)
+        self.bfy=[itm(nevelium_ore,2),itm(rock,1)]
+pick=pick52("Pickaxe",0,1,1)
+charcor_pick=charcor_pick52("Charcor Pickaxe",1,2,1)
+nevelium_pick=nevelium_pick52("Nevelium Pickaxe",2,3,2)
+burb=pick52("Burbaxe",-1,10,10)
+sword=sword52("Sword",3,0,3)
+charcor_sword=charcor_sword52("Charcor Sword",4,0,5)
+charium_sword=charium_sword52("Charium Sword",5,0,7)
+nevelium_sword=nevelium_sword52("Nevelium Sword",6,1,8)
+# _sword=_sword52("",7,1,10)
+hts=[pick,charcor_pick,nevelium_pick,sword,charcor_sword,charium_sword,nevelium_sword]
+# class p:
+#     def __init__(self):
+#         self.hold=[
+#             [itm(void,0),itm(dirt,5),itm(rock,5)],
+#             [itm(dark_rock,3),itm(void,0),itm(void,0)]
+#         ]
+def craft(hav):
+    has={}
+    for a,i in enumerate(hav.hold):
+        for b,j in enumerate(i):
+            if j.tp.nm!="void":
+                if j.tp.nm in has:
+                    has[j.tp.nm].append([a,b,j])
+                else:
+                    has[j.tp.nm]=[[a,b,j]]
+    # cbl=[]
+    # for i in hts:
+    #     for j in i.bfy:
+    #         if j.tp.nm in has:
+    #             for k in has[j.tp.nm]:
+    #                 if k[2].no>=j.no:
+    #                     cbl.append(i)
+    htss={}
+    for i in hts:
+        i.crafty()
+        htss[i.nm.lower()]=i
+    buld=intput("What would you like to build?").lower()
+    if not buld in htss:
+        return
+    for i in htss[buld].bfy:
+        if i.tp.nm in has:
+            for j in has[i.tp.nm]:
+                if j[2].no<i.no:
+                    return
+    for i in htss[buld].bfy:
+        if i.tp.nm in has:
+            for j in has[i.tp.nm]:
+                if j[2].no>=i.no:
+                    hav.hold[j[0]][j[1]].no-=i.no
+                    break
+    hav.addItm(htss[buld])

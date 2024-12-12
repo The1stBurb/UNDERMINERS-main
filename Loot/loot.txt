@@ -1,0 +1,17 @@
+items: placed_rock,rock,dark_rock,charium_ore,nevelium_ore,decante_ore,charcor_ore,dirt,chest,pick,charcor_pick,nevelium_pick,sword,charcor_sword,charium_sword,nevelium_sword
+placed_rock: 40%, 5-10
+rock: 35%, 5-15
+dark_rock: 20%, 1-5
+charium_ore: 10%, 1-5
+nevelium_ore: 1%, 1-2
+decante_ore: 5%, 1-3
+charcor_ore: 30%, 1-10
+dirt: 50%, 5-10
+chest: 5%, 1-2
+pick: 15%, 1-1
+charcor_pick: 10%, 1-1
+nevelium_pick: 3%, 1-1
+sword: 10%, 1-1
+charcor_sword: 7%, 1-1
+charium_sword: 5%, 1-1
+nevelium_sword: 2%, 1-1
