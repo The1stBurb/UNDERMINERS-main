@@ -1,5 +1,5 @@
 #https://docs.google.com/document/d/1c2sKY1Q4PDsK8h_j1TRbw3K_OkEq5jbrHTj6mb4z3LY/edit?tab=t.0
-from items.oreuh import brck,nts,no_rock,placed_rock,rock,dark_rock,charium_ore,nevelium_ore,decante_ore,charcor_ore,void,dirt,chest,chest52,hts,pick,charcor_pick,nevelium_pick,sword,charcor_sword,charium_sword,nevelium_sword,burb,craft
+from items.oreuh import brck,nts,no_rock,placed_rock,rock,dark_rock,charium_ore,nevelium_ore,decante_ore,charcor_ore,void,dirt,hts,pick,charcor_pick,nevelium_pick,sword,charcor_sword,charium_sword,nevelium_sword,burb,craft
 from base_funcs import *
 from bobs import xny,bobs
 from Loot.looter import gitStf
@@ -22,6 +22,79 @@ Y = 1000
 scrn = pygame.display.set_mode((X, Y))#,pygame.FULLSCREEN)
 clk=pygame.time.Clock()
 font = pygame.font.SysFont(None, 20)
+class chest52(brck):
+    def __init__(self,nm,disp,sprd,num,pronc,mnLvl,roleth):
+        super().__init__(nm,disp,sprd,num,pronc,mnLvl,col=(119,69,19))
+        self.holds=[
+            [itm(dirt,10),itm(void,0),itm(void,0),],
+            [itm(void,0),itm(void,0),itm(void,0),],
+            [itm(void,0),itm(void,0),itm(void,0),],
+            ]
+        r=roleth
+        while len(r)>0:
+            x,y=randint(0,2),randint(0,2)
+            if self.holds[y][x].tp.nm=="void":
+                ch=choice(r)
+                self.holds[y][x]=itm(ch[0],ch[1])
+                r.remove(ch)
+    def prHold(self,p,m,ck):
+        ms=xny(-1,-1)
+        x1=x2=y1=y2=-1
+        while True:
+            scrn.fill((255,255,255))
+            if x1!=-1 and y1!=-1:
+                rect(x1*110,y1*110,110,100,col=(0,200,200))
+            if x2!=-1 and y2!=-1:
+                rect(x2*110,y2*110,110,100,col=(200,0,200))
+            p.prInv1()
+            for a,i in enumerate(self.holds):
+                for b,j in enumerate(i):
+                    if j.tp in nts:
+                        if j.tp.nm=="void":
+                            scrn.blit(colorize(vbrcck,j.tp.col),(b*110+550,a*110))    
+                        else:
+                            scrn.blit(colorize(brcck,j.tp.col),(b*110+550,a*110))
+                    elif j.tp in hts:
+                        scrn.blit(colorize(picck,j.tp.col),(b*110+560,a*110))
+                    text(f"{j.no}x {j.tp.nm}",b*110+560,a*110+85)
+            rect(900,900,100,100,col=(255,0,0))
+            text("EXIT",900,900)
+            rect(650,0,50,20,col=(200,200,200))
+            text("MOVE",652,2)
+            text(f"{ms.x},{ms.y},{int(ms.x/110)},{int(ms.y/110)}",0,900)
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    quit()
+                elif event.type==pygame.MOUSEBUTTONDOWN and event.button==1:
+                    ms.x,ms.y=pygame.mouse.get_pos()
+            if ms.x>900 and ms.y>900:
+                return
+            elif ms.x<650 and ms.y<750 and ms.x>0 and ms.y>0:
+                x,y=int(ms.x/110),int(ms.y/110)
+                print(x,y)
+                # print(int(ms.x/110),int(ms.y/100))
+                if x1==-1 or y1==-1:
+                    x1,y1=x,y
+                elif x1==x and y1==y:
+                    x1=y1=-1
+                elif x2==-1 or y2==-1:
+                    x2,y2=x,y
+                elif x2==x and y2==y:
+                    x2=y2=-1
+            elif (ms.x>650 and ms.x<700 and ms.y<20 and x1!=-1 and x2!=-1 and y1!=-1 and y2!=-1) or (x2!=-1 and y2!=-1):
+                flis="chest"
+                if x1<=5:
+                    flis="inv"
+                it1,it2=self.hold[y1][x1],self.hold[y2][x2]
+                if it1.tp.nm==it2.tp.nm:
+                    it1.no+=it2.no
+                    it2=itm(void,0)
+                self.hold[y1][x1],self.hold[y2][x2]=it2,it1
+                x1=x2=y1=y2=-1
+            pygame.display.flip()
+            ms.x,ms.y=-1,-1
+chest=chest52("chest","C",1,10,"chest",0,[])
+nts.append(chest)
 sz=50
 class mos:
     def __init__(self,ck):
@@ -425,46 +498,111 @@ class plr:
         if drw:
             pr(self.x,self.y)
     def prInv(self):
-        keyboard.send("backspace")
+        ms=xny(-1,-1)
+        x1=x2=y1=y2=-1
         while True:
-            print("\033c")
-            for b in range(5):
-                prat(b+1,b*16+3,1)
-            print("|")
+            scrn.fill((255,255,255))
+            if x1!=-1 and y1!=-1:
+                rect(x1*110,y1*110,110,100,col=(0,200,200))
+            if x2!=-1 and y2!=-1:
+                rect(x2*110,y2*110,110,100,col=(200,0,200))
             for a,i in enumerate(self.hold):
-                prat(a+1,1,a+(3 if a==5 else 2))
                 for b,j in enumerate(i):
-                    prat("|"+str(j),(b)*16+3,(a)+(3 if a==5 else 2))
-                print("|")
-            print("\nRow 6 is the bar you can access anytime! |EXIT|")
-            dor=intput("Would you like to move an item, custom color an item, craft or exit? (move,craft,exit,colour)")
-            if dor=="move":
-                x1,y1=gtInt("What is the X coordinate of the item?",1,5),gtInt("Whats the Y?",1,6)
-                x2,y2=gtInt("What is the X coordinate of where you to move it?",1,5),gtInt("What is the Y?",1,6)
-                # print(x1,y1,x2,y2)
-                it1=self.hold[y1-1][x1-1]
-                it2=self.hold[y2-1][x2-1]
+                    if j.tp in nts:
+                        if j.tp.nm=="void":
+                            scrn.blit(colorize(vbrcck,j.tp.col),(b*110,a*110))    
+                        else:
+                            scrn.blit(colorize(brcck,j.tp.col),(b*110,a*110))
+                    elif j.tp in hts:
+                        scrn.blit(colorize(picck,j.tp.col),(b*110+10,a*110))
+                    text(f"{j.no}x {j.tp.nm}",b*110+10,a*110+85)
+            rect(900,900,100,100,col=(255,0,0))
+            text("EXIT",900,900)
+            rect(650,0,50,20,col=(200,200,200))
+            text("MOVE",652,2)
+            text(f"{ms.x},{ms.y},{int(ms.x/110)},{int(ms.y/110)}",0,900)
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    quit()
+                elif event.type==pygame.MOUSEBUTTONDOWN and event.button==1:
+                    ms.x,ms.y=pygame.mouse.get_pos()
+            if ms.x>900 and ms.y>900:
+                return
+            elif ms.x<650 and ms.y<750 and ms.x>0 and ms.y>0:
+                x,y=int(ms.x/110),int(ms.y/110)
+                print(x,y)
+                # print(int(ms.x/110),int(ms.y/100))
+                if x1==-1 or y1==-1:
+                    x1,y1=x,y
+                elif x1==x and y1==y:
+                    x1=y1=-1
+                elif x2==-1 or y2==-1:
+                    x2,y2=x,y
+                elif x2==x and y2==y:
+                    x2=y2=-1
+            elif (ms.x>650 and ms.x<700 and ms.y<20 and x1!=-1 and x2!=-1 and y1!=-1 and y2!=-1) or (x2!=-1 and y2!=-1):
+                it1,it2=self.hold[y1][x1],self.hold[y2][x2]
                 if it1.tp.nm==it2.tp.nm:
                     it1.no+=it2.no
                     it2=itm(void,0)
-                self.hold[y1-1][x1-1],self.hold[y2-1][x2-1]=it2,it1
-            elif dor=="exit":
-                print("Exiting...")
-                sleep(0.5)
-                print("\033c")
-                return
-            elif dor=="craft":
-                craft(self)
-            elif dor=="colour":
-                x1,y1=gtInt("What is the X coordinate of the item?",1,5),gtInt("Whats the Y?",1,6)
-                self.colourify(x1,y1)
+                self.hold[y1][x1],self.hold[y2][x2]=it2,it1
+                x1=x2=y1=y2=-1
+            pygame.display.flip()
+            ms.x,ms.y=-1,-1
+            # rght,_,_=pygame.mouse.get_pressed()
+            # if rght and pr==False:
+            #     ms=xny()
+    # def prInv2(self):
+    #     keyboard.send("backspace")
+    #     while True:
+    #         print("\033c")
+    #         for b in range(5):
+    #             prat(b+1,b*16+3,1)
+    #         print("|")
+    #         for a,i in enumerate(self.hold):
+    #             prat(a+1,1,a+(3 if a==5 else 2))
+    #             for b,j in enumerate(i):
+    #                 prat("|"+str(j),(b)*16+3,(a)+(3 if a==5 else 2))
+    #             print("|")
+    #         print("\nRow 6 is the bar you can access anytime! |EXIT|")
+    #         dor=intput("Would you like to move an item, custom color an item, craft or exit? (move,craft,exit,colour)")
+    #         if dor=="move":
+    #             x1,y1=gtInt("What is the X coordinate of the item?",1,5),gtInt("Whats the Y?",1,6)
+    #             x2,y2=gtInt("What is the X coordinate of where you to move it?",1,5),gtInt("What is the Y?",1,6)
+    #             # print(x1,y1,x2,y2)
+    #             it1=self.hold[y1-1][x1-1]
+    #             it2=self.hold[y2-1][x2-1]
+    #             if it1.tp.nm==it2.tp.nm:
+    #                 it1.no+=it2.no
+    #                 it2=itm(void,0)
+    #             self.hold[y1-1][x1-1],self.hold[y2-1][x2-1]=it2,it1
+    #         elif dor=="exit":
+    #             print("Exiting...")
+    #             sleep(0.5)
+    #             print("\033c")
+    #             return
+    #         elif dor=="craft":
+    #             craft(self)
+    #         elif dor=="colour":
+    #             x1,y1=gtInt("What is the X coordinate of the item?",1,5),gtInt("Whats the Y?",1,6)
+    #             self.colourify(x1,y1)
     def prInv1(self):
-        for b in range(5):
-            prat(b+1,b*16+3,1)
+        # for b in range(5):
+        #     prat(b+1,b*16+3,1)
+        # for a,i in enumerate(self.hold):
+        #     prat(a+1,1,a+(3 if a==5 else 2))
+        #     for b,j in enumerate(i):
+        #         prat("|"+str(j),(b)*16+3,(a)+(3 if a==5 else 2))
         for a,i in enumerate(self.hold):
-            prat(a+1,1,a+(3 if a==5 else 2))
-            for b,j in enumerate(i):
-                prat("|"+str(j),(b)*16+3,(a)+(3 if a==5 else 2))
+                for b,j in enumerate(i):
+                    if j.tp in nts:
+                        if j.tp.nm=="void":
+                            scrn.blit(colorize(vbrcck,j.tp.col),(b*110,a*110))    
+                        else:
+                            scrn.blit(colorize(brcck,j.tp.col),(b*110,a*110))
+                    elif j.tp in hts:
+                        scrn.blit(colorize(picck,j.tp.col),(b*110+10,a*110))
+                    text(f"{j.no}x {j.tp.nm}",b*110+10,a*110+85)
     def addItm(self,item):
         if not isinstance(item,itm):
             item=itm(item,1)
@@ -532,7 +670,11 @@ mp=MP()
 def rect(x,y,w,h,col=(255,255,255)):
     # print(col)
     pygame.draw.rect(scrn, col, pygame.Rect(x, y, w, h))
+def text(txt,x,y,col=(0,0,0)):
+    scrn.blit(font.render(txt, True, col),(x,y))
 brcck = pygame.transform.scale(pygame.image.load("images\\brick_base.png").convert_alpha(),(100,100))
+vbrcck=brcck
+vbrcck.set_alpha(0)
 picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
 #scaled_image = pygame.transform.scale(image, (new_width, new_height))
 def pr(x,y):
@@ -617,8 +759,19 @@ while True:
                 do="c"
             elif keys[left]or keys[a]:
                 do="v"
+            elif keys[save]:
+                do="u"
+            elif keys[place]:
+                do="p"
+            elif keys[brek]:
+                do="b"
+            elif keys[inv]:
+                do="i"
+            elif keys[open]:
+                do="o"
             if do==po[0] and po[0]!="" and time.time()-po[1]<1:
                 do="b"
+            
             po=[do,time.time()]
         p.mover(do)
         # print(do)
