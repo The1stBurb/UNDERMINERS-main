@@ -9,6 +9,13 @@ from random import randint,choice
 
 import saveus.piler as piler,sys,keyboard,mouse
 import pygame
+import logging
+
+# Configure the logging system
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',filename="logs.log")
+
+# Create a logger
+logger = logging.getLogger(__name__)
 pygame.init()
 X = 1000
 Y = 999
@@ -266,6 +273,17 @@ class MP:
     def getTile(self):
         return self.mp[self.tl.y][self.tl.x]
 dubloons=False
+def colorize(image, new_color):
+    tinted = pygame.Surface(image.get_size(), pygame.SRCALPHA)
+    tinted.fill(new_color)
+    tinted.blit(image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+    return tinted
+    """
+    Create a "colorized" version of the image.
+    """
+    image = image.copy()
+    image.fill(new_color[0:3] + (0,), special_flags=py.BLEND_RGBA_MULT)
+    return image
 class plr:
     def __init__(self):
         self.x=0
@@ -280,6 +298,10 @@ class plr:
             [itm(pick,1),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],]
     def dr(self,ox,oy):
         rect(self.x*10,self.y*10,10,10,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
+        for a,i in enumerate(self.hold[5]):
+            # logger.debug(i.tp.col)
+            
+            scrn.blit(colorize(brcck,i.tp.col),(i*100,100))
     def move(self,d):
         global mp
         if d=="b":
@@ -503,6 +525,7 @@ mp=MP()
 def rect(x,y,w,h,col=(255,255,255)):
     # print(col)
     pygame.draw.rect(scrn, col, pygame.Rect(x, y, w, h))
+brcck = pygame.image.load("images\\bricky.png").convert_alpha()
 def pr(x,y):
     dx=0#p.x-50
     dy=0#p.y-50
