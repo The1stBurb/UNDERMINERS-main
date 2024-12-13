@@ -25,7 +25,7 @@ class brck:
         # print(nm,disp,sprd,num,pronc)
         # quit()
     def __str__(self):
-        return f"{self.col}{self.txt}{("\033[0m"if self.col!="" else "")}"
+        return f"{self.txt}"#{self.col}{self.txt}{("\033[0m"if self.col!="" else "")}"
     def __repr__(self):
         return self.nm
     def stat(self):

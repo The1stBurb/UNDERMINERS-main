@@ -1,5 +1,5 @@
 #https://docs.google.com/document/d/1c2sKY1Q4PDsK8h_j1TRbw3K_OkEq5jbrHTj6mb4z3LY/edit?tab=t.0
-from items.oreuh import nts,no_rock,placed_rock,rock,dark_rock,charium_ore,nevelium_ore,decante_ore,charcor_ore,void,dirt,chest,chest52,hts,pick,charcor_pick,nevelium_pick,sword,charcor_sword,charium_sword,nevelium_sword,burb,craft
+from items.oreuh import brck,nts,no_rock,placed_rock,rock,dark_rock,charium_ore,nevelium_ore,decante_ore,charcor_ore,void,dirt,chest,chest52,hts,pick,charcor_pick,nevelium_pick,sword,charcor_sword,charium_sword,nevelium_sword,burb,craft
 from base_funcs import *
 from bobs import xny,bobs
 from Loot.looter import gitStf
@@ -291,31 +291,33 @@ class plr:
         self.tx=0
         self.ty=0
         self.dir=1
-        self.us=["^",">","V","<"]
+        self.us=[pygame.transform.scale(pygame.image.load("images\\UP.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\RIGHT.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\DOWN.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\LEFT.png").convert_alpha(),(sz,sz))]#"^",">","V","<"]
         self.hl=0
         self.hold=[
-            [itm(rock,5),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
+            [itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
             [itm(pick,1),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],]
     def dr(self,ox,oy):
         # rect(self.x*sz,self.y*sz,sz,sz,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
-        rect(4.5*sz,4.5*sz,sz,sz,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
+        # rect(4.5*sz,4.5*sz,sz,sz,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
+        scrn.blit(self.us[self.dir],(4.5*sz,4.5*sz))
         for a,i in enumerate(self.hold[5]):
             # logger.debug(i.tp.col)
-            if i.tp.nm!="void":
-                if i.tp in nts:
-                    scrn.blit(colorize(brcck,i.tp.col),(a*100,900))
-                elif i.tp in hts:
-                    scrn.blit(colorize(picck,i.tp.col),(a*100,900))
-                scrn.blit(font.render(f"{i.no}x {i.tp}", True, (0, 0, 0)),(a*100+10,985))
+            # if i.tp.nm!="void":
+                # print(issubclass(i.tp,brck))
+            if i.tp in nts:
+                scrn.blit(colorize(brcck,i.tp.col),(a*110,900))
+            elif i.tp in hts:
+                scrn.blit(colorize(picck,i.tp.col),(a*110+10,920))
+            scrn.blit(font.render(f"{i.no}x {i.tp.nm}", True, (0, 0, 0)),(a*110+10,985))
     def move(self,d):
         global mp
         if d=="b":
             dr=gd(self.dir)
             nx,ny=self.x+dr[0],self.y+dr[1]
-            self.addItm()
-            mp.getTile().bit[ny][nx]=0
-            move(nx+1,ny+1)
-            print(no_rock)
+            self.addItm()#nts[mp.bit[ny][nx]])
+            mp.bit[ny][nx]=0
+            # move(nx+1,ny+1)
+            # print(no_rock)
         elif d=="z":
             self.dir=0
         elif d=="x":
@@ -531,7 +533,7 @@ def rect(x,y,w,h,col=(255,255,255)):
     # print(col)
     pygame.draw.rect(scrn, col, pygame.Rect(x, y, w, h))
 brcck = pygame.transform.scale(pygame.image.load("images\\brick_base.png").convert_alpha(),(100,100))
-picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(100,100))
+picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
 #scaled_image = pygame.transform.scale(image, (new_width, new_height))
 def pr(x,y):
     dx=(p.x+0.5-5)*sz
@@ -570,7 +572,7 @@ def writSave():
     rs=[[repr(j)for j in i]for i in p.hold]
     with open("saveus/save.pile","w")as sv:
         sv.write(piler.enc([mp.bit,rs,(p.x,p.y)]))#piler.enc
-if True:#intput("Get a new game, or use your old save? (new/old)")=="new":
+if not True:#intput("Get a new game, or use your old save? (new/old)")=="new":
     writSave()
 else:
     getSave()
