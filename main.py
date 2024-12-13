@@ -18,11 +18,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 pygame.init()
 X = 1000
-Y = 999
-scrn = pygame.display.set_mode((X, Y))
+Y = 1000
+scrn = pygame.display.set_mode((X, Y))#,pygame.FULLSCREEN)
 clk=pygame.time.Clock()
-font = pygame.font.SysFont(None, 50)
-
+font = pygame.font.SysFont(None, 20)
+sz=50
 class mos:
     def __init__(self,ck):
         self.ix=0
@@ -297,11 +297,16 @@ class plr:
             [itm(rock,5),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
             [itm(pick,1),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],]
     def dr(self,ox,oy):
-        rect(self.x*10,self.y*10,10,10,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
+        # rect(self.x*sz,self.y*sz,sz,sz,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
+        rect(4.5*sz,4.5*sz,sz,sz,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
         for a,i in enumerate(self.hold[5]):
             # logger.debug(i.tp.col)
-            
-            scrn.blit(colorize(brcck,i.tp.col),(i*100,100))
+            if i.tp.nm!="void":
+                if i.tp in nts:
+                    scrn.blit(colorize(brcck,i.tp.col),(a*100,900))
+                elif i.tp in hts:
+                    scrn.blit(colorize(picck,i.tp.col),(a*100,900))
+                scrn.blit(font.render(f"{i.no}x {i.tp}", True, (0, 0, 0)),(a*100+10,985))
     def move(self,d):
         global mp
         if d=="b":
@@ -525,19 +530,26 @@ mp=MP()
 def rect(x,y,w,h,col=(255,255,255)):
     # print(col)
     pygame.draw.rect(scrn, col, pygame.Rect(x, y, w, h))
-brcck = pygame.image.load("images\\bricky.png").convert_alpha()
+brcck = pygame.transform.scale(pygame.image.load("images\\brick_base.png").convert_alpha(),(100,100))
+picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(100,100))
+#scaled_image = pygame.transform.scale(image, (new_width, new_height))
 def pr(x,y):
-    dx=0#p.x-50
-    dy=0#p.y-50
+    dx=(p.x+0.5-5)*sz
+    dy=(p.y+0.5-5)*sz
     # move(1,1)
-    for i in range(len(mp.bit)):
-        for j in range(len(mp.bit[i])):#x2,min(x2+20,len(mp.bit[i]))):
+    szz=10
+    x2=max(0,x-szz)
+    y2=max(0,y-szz)
+    for i in range(len(mp.bit)):#y2,min(y2+szz,len(mp.bit))):
+        for j in range(len(mp.bit[i])):#x2,min(x2+szz,len(mp.bit[i]))):
+            if abs(i-y)>szz or abs(j-x)>szz:
+                continue
             tp=mp.bit[i][j]
             aired=tp in[0,1,8,10] or (i>0 and mp.bit[i-1][j]in[0,1,8]) or (i<len(mp.bit)-1 and mp.bit[i+1][j]in[0,1,8]) or (j>0 and mp.bit[i][j-1]in[0,1,8]) or (j<len(mp.bit[i])-1 and mp.bit[i][j+1]in[0,1,8])
             if aired:
-                rect(j*10-dx,i*10-dy,10,10,nts[tp].col)
+                rect(j*sz-dx,i*sz-dy,sz,sz,nts[tp].col)
             else:
-                rect(j*10-dx,i*10-dy,10,10,(0,0,0))
+                rect(j*sz-dx,i*sz-dy,sz,sz,(0,0,0))
     #DONT DELETE
     p.dr(p.x,p.y)
     # for i in bobs:
