@@ -58,8 +58,8 @@ class bob:
             self.s=self.sp+1    
             return "startPath"
         d=self.path[0]
-        if int(self.x/10)==int(pr.x/10) and int(self.y/10)==int(pr.y/10):
-            self.disp(d)
+        # if int(self.x/10)==int(pr.x/10) and int(self.y/10)==int(pr.y/10):
+        #     self.disp(d)
         self.path.remove(d)
         return ""
         # self.disp(d)
@@ -91,8 +91,8 @@ class bob:
                 for b,j in enumerate(i):
                     if j==0:
                         self.avp.append((b,a))
-        if int(self.x/10)==int(pr.x/10) and int(self.y/10)==int(pr.y/10):
-            self.disp((self.y,self.x))
+        # if int(self.x/10)==int(pr.x/10) and int(self.y/10)==int(pr.y/10):
+        #     self.disp((self.y,self.x))
         self.s+=1
         if self.path!=None and len(self.path)<=1:#dist(self.x,self.y,self.t.x,self.t.y)
             self.t.x,self.t.y=-1,-1
@@ -106,7 +106,7 @@ class bob:
             if dec=="newPath":
                 self.getTarget(pr,mapd)
 trol=bob(2,9,"Troll","N",5,1)
-bobs=[]
+bobs=[]#trol]
 # for i in range(0,360,6):
 #     prat(f"{i},{sin(i)}",10,10)
 #     prat("@",int(10+sin(i)*5),int(10+cos(i)*5))

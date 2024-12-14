@@ -40,6 +40,7 @@ class chest52(brck):
     def prHold(self,p,m,ck):
         ms=xny(-1,-1)
         x1=x2=y1=y2=-1
+        flis=flis2="chest"
         while True:
             scrn.fill((255,255,255))
             if x1!=-1 and y1!=-1:
@@ -69,28 +70,44 @@ class chest52(brck):
                     ms.x,ms.y=pygame.mouse.get_pos()
             if ms.x>900 and ms.y>900:
                 return
-            elif ms.x<650 and ms.y<750 and ms.x>0 and ms.y>0:
+            elif ms.x<880 and ms.y<660 and ms.x>0 and ms.y>0:
                 x,y=int(ms.x/110),int(ms.y/110)
-                print(x,y)
+                # print(x,y)
                 # print(int(ms.x/110),int(ms.y/100))
                 if x1==-1 or y1==-1:
                     x1,y1=x,y
+                    if x1>=5 and y1>3:
+                        x1=y1=-1
+                    if x1<5:
+                        flis="inv"
+                # flis2="chest"
+                # if x2<=5:
+                #     flis2="inv"
                 elif x1==x and y1==y:
                     x1=y1=-1
+                    flis="chest"
                 elif x2==-1 or y2==-1:
                     x2,y2=x,y
+                    if x2>=5 and y2>3:
+                        x2=y2=-1
+                    if x2<5:
+                        flis2="inv"
                 elif x2==x and y2==y:
                     x2=y2=-1
+                    flis2="chest"
             elif (ms.x>650 and ms.x<700 and ms.y<20 and x1!=-1 and x2!=-1 and y1!=-1 and y2!=-1) or (x2!=-1 and y2!=-1):
-                flis="chest"
-                if x1<=5:
-                    flis="inv"
-                it1,it2=self.hold[y1][x1],self.hold[y2][x2]
+                if flis=="chest":
+                    x1-=5
+                if flis2=="chest":
+                    x2-=5
+                # print(x1,y1,flis,x2,y2,flis2)
+                it1,it2=(self.holds if flis=="chest"else p.hold)[y1][x1],(self.holds if flis2=="chest"else p.hold)[y2][x2]
                 if it1.tp.nm==it2.tp.nm:
                     it1.no+=it2.no
                     it2=itm(void,0)
-                self.hold[y1][x1],self.hold[y2][x2]=it2,it1
+                (self.holds if flis=="chest"else p.hold)[y1][x1],(self.holds if flis2=="chest"else p.hold)[y2][x2]=it2,it1
                 x1=x2=y1=y2=-1
+                flis=flis2="chest"
             pygame.display.flip()
             ms.x,ms.y=-1,-1
 chest=chest52("chest","C",1,10,"chest",0,[])
@@ -676,6 +693,7 @@ brcck = pygame.transform.scale(pygame.image.load("images\\brick_base.png").conve
 vbrcck=brcck
 vbrcck.set_alpha(0)
 picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
+bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
 #scaled_image = pygame.transform.scale(image, (new_width, new_height))
 def pr(x,y):
     dx=(p.x+0.5-5)*sz
@@ -696,8 +714,9 @@ def pr(x,y):
                 rect(j*sz-dx,i*sz-dy,sz,sz,(0,0,0))
     #DONT DELETE
     p.dr(p.x,p.y)
-    # for i in bobs:
-    #     i.disp((i.y,i.x))
+    for i in bobs:
+        scrn.blit(bobck,(i.x*sz-dx,i.y*sz-dy))
+        # i.disp((i.y,i.x))
 def getSave():
     global mp
     b=""
@@ -771,12 +790,13 @@ while True:
                 do="o"
             if do==po[0] and po[0]!="" and time.time()-po[1]<1:
                 do="b"
-            
             po=[do,time.time()]
         p.mover(do)
         # print(do)
         # sleep(0.1)
         clk.tick(60)
+        for i in bobs:
+            i.run(mp.bit,[],p)
         pr(p.x,p.y)
         scrn.blit(font.render(f"{do},", True, (255, 255, 255)),(0,0))
         pygame.display.flip()
