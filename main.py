@@ -21,7 +21,9 @@ X = 1000
 Y = 1000
 scrn = pygame.display.set_mode((X, Y))#,pygame.FULLSCREEN)
 clk=pygame.time.Clock()
+pygame.font.init()
 font = pygame.font.SysFont(None, 20)
+# font = pygame.font.Font('Middlecase-Regular.ttf', 20)
 class chest52(brck):
     def __init__(self,nm,disp,sprd,num,pronc,mnLvl,roleth):
         super().__init__(nm,disp,sprd,num,pronc,mnLvl,col=(119,69,19))
@@ -288,8 +290,8 @@ class tiles:
                 self.bit[tk[1]][tk[0]]=tk[2]
 class MP:
     def __init__(self):
-        self.mw=2
-        self.mh=2
+        self.mw=5
+        self.mh=5
         self.mp=[[tiles() for j in range(self.mw)]for i in range(self.mh)]
         self.bit=[]
         self.tl=xny(0,0)
@@ -398,7 +400,7 @@ class plr:
                 scrn.blit(colorize(brcck,i.tp.col),(a*110,900))
             elif i.tp in hts:
                 scrn.blit(colorize(picck,i.tp.col),(a*110+10,920))
-            scrn.blit(font.render(f"{i.no}x {i.tp.nm}", True, (0, 0, 0)),(a*110+10,985))
+            scrn.blit(font.render(f"{i.no}x {i.tp.nm}", True, (0, 0, 0)),(a*110+10,975))
     def move(self,d):
         global mp
         if d=="b":
@@ -506,8 +508,8 @@ class plr:
             self.dir={"z":0,"x":1,"c":2,"v":3}[d]
         mv=gd(self.dir)
         drw=(self.x%10 and self.dir==1) or ((self.x-1)%10 and self.dir==3)or(self.y%10 and self.dir==2) or ((self.y-1)%10 and self.dir==0)
-        self.y=0 if self.y+mv[1]<0 else(len(mp.bit)-2 if self.y+mv[1]>=len(mp.bit)-1 else self.y)
-        self.x=0 if self.x+mv[0]<0 else(len(mp.bit[self.y+mv[1]])-2 if self.x+mv[0]>=len(mp.bit[self.y+mv[1]])-1 else self.x)
+        self.y=1 if self.y+mv[1]<0 else(len(mp.bit)-2 if self.y+mv[1]>len(mp.bit)-1 else self.y)
+        self.x=1 if self.x+mv[0]<0 else(len(mp.bit[self.y+mv[1]])-2 if self.x+mv[0]>len(mp.bit[self.y+mv[1]])-1 else self.x)
         if self.y+mv[1]>=0 and self.y+mv[1]<len(mp.bit) and self.x+mv[0]>=0 and self.x+mv[0]<len(mp.bit[self.y+mv[1]]):
             if mp.bit[self.y+mv[1]][self.x+mv[0]]==0:
                 self.y,self.x=self.y+mv[1],self.x+mv[0]
@@ -684,6 +686,10 @@ class plr:
 p=plr()
 
 mp=MP()
+def rot90(img,r=-1):
+    if r==-1:
+        r=randint(0,3)*90
+    return pygame.transform.rotate(img,r)
 def rect(x,y,w,h,col=(255,255,255)):
     # print(col)
     pygame.draw.rect(scrn, col, pygame.Rect(x, y, w, h))
@@ -694,22 +700,37 @@ vbrcck=brcck
 vbrcck.set_alpha(0)
 picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
 bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
+rocck=pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz))
+ore=pygame.transform.scale(pygame.image.load("images\\ore_spots.png").convert_alpha(),(sz,sz))
+cchest=pygame.transform.scale(pygame.image.load("images\\chest_base.png").convert_alpha(),(sz,sz))
 #scaled_image = pygame.transform.scale(image, (new_width, new_height))
 def pr(x,y):
     dx=(p.x+0.5-5)*sz
     dy=(p.y+0.5-5)*sz
     # move(1,1)
-    szz=10
+    szz=12
     x2=max(0,x-szz)
     y2=max(0,y-szz)
     for i in range(len(mp.bit)):#y2,min(y2+szz,len(mp.bit))):
         for j in range(len(mp.bit[i])):#x2,min(x2+szz,len(mp.bit[i]))):
-            if abs(i-y)>szz or abs(j-x)>szz:
+            if abs(i-y)>12 or abs(j-x)>15:
                 continue
             tp=mp.bit[i][j]
-            aired=tp in[0,1,8,10] or (i>0 and mp.bit[i-1][j]in[0,1,8]) or (i<len(mp.bit)-1 and mp.bit[i+1][j]in[0,1,8]) or (j>0 and mp.bit[i][j-1]in[0,1,8]) or (j<len(mp.bit[i])-1 and mp.bit[i][j+1]in[0,1,8])
+            aired=tp in[0,1,8] or (i>0 and mp.bit[i-1][j]in[0,1,8]) or (i<len(mp.bit)-1 and mp.bit[i+1][j]in[0,1,8]) or (j>0 and mp.bit[i][j-1]in[0,1,8]) or (j<len(mp.bit[i])-1 and mp.bit[i][j+1]in[0,1,8])
             if aired:
-                rect(j*sz-dx,i*sz-dy,sz,sz,nts[tp].col)
+                if tp in [0,8]:
+                    rect(j*sz-dx,i*sz-dy,sz,sz,nts[tp].col)
+                elif tp in [4,5,6,7]:
+                    # r=randint(0,3)*90
+                    scrn.blit(rocck,(j*sz-dx,i*sz-dy))
+                    scrn.blit(colorize(ore,nts[tp].col),(j*sz-dx,i*sz-dy))
+                elif tp==10:
+                    scrn.blit(colorize(cchest,nts[tp].col),(j*sz-dx,i*sz-dy))
+                else:
+                    scrn.blit(colorize(rocck,nts[tp].col),(j*sz-dx,i*sz-dy))
+                    if tp==9:
+                        scrn.blit(colorize(ore,nts[2].col),(j*sz-dx,i*sz-dy))
+                    # rect(j*sz-dx,i*sz-dy,sz,sz,nts[tp].col)
             else:
                 rect(j*sz-dx,i*sz-dy,sz,sz,(0,0,0))
     #DONT DELETE
@@ -756,6 +777,7 @@ def texter():
 dev=False
 up,right,down,left,save,w,a,s,d,place,brek,inv,open=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
 po=["",time.time()]
+print(len(mp.bit),len(mp.bit[0]))
 while True:
         scrn.fill((255,255,255))
         for i in pygame.event.get():
