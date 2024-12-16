@@ -6,7 +6,7 @@ cows=[
     ["m","n","o","p","q","r","2","8"],#2
     ["s","t","u","v","w","x","3","9"],#3
     ["y","z",",","[","]","(","4","'"],#4
-    [")",".","\""," ","A","B","5","C"],#5
+    [")",".","\""," ","","B","5","C"],#5
     ]
 #0-060 air
 #1-061 placed_rock
@@ -31,6 +31,9 @@ def enc(txt):
     for i in str(txt):
         cid=("0"if i.lower()==i else "1")
         js=gcow(i.lower())
+        # print(js)
+        if js is None:
+            js=[4,5]
         cid+=(str(js[0])+str(js[1]))
         # print(cid)
         cid2+=cid

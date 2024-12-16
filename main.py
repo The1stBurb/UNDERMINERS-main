@@ -383,7 +383,7 @@ class plr:
         self.tx=0
         self.ty=0
         self.dir=1
-        self.us=[pygame.transform.scale(pygame.image.load("images\\UP.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\RIGHT.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\DOWN.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\LEFT.png").convert_alpha(),(sz,sz))]#"^",">","V","<"]
+        self.us=[pygame.transform.scale(pygame.image.load("images\\UP.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\RIGHT.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\DOWn.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\LEFT.png").convert_alpha(),(sz,sz))]#"^",">","V","<"]
         self.hl=0
         self.hold=[
             [itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
@@ -505,7 +505,10 @@ class plr:
                 move(nx+1,ny+1)
                 print(no_rock)
         elif d in "zxcv":
+            pd=self.dir
             self.dir={"z":0,"x":1,"c":2,"v":3}[d]
+            if pd!=self.dir:
+                return
         mv=gd(self.dir)
         drw=(self.x%10 and self.dir==1) or ((self.x-1)%10 and self.dir==3)or(self.y%10 and self.dir==2) or ((self.y-1)%10 and self.dir==0)
         self.y=1 if self.y+mv[1]<0 else(len(mp.bit)-2 if self.y+mv[1]>len(mp.bit)-1 else self.y)
@@ -700,6 +703,7 @@ vbrcck=brcck
 vbrcck.set_alpha(0)
 picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
 bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
+bobcks=[pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),]
 rocck=pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz))
 ore=pygame.transform.scale(pygame.image.load("images\\ore_spots.png").convert_alpha(),(sz,sz))
 cchest=pygame.transform.scale(pygame.image.load("images\\chest_base.png").convert_alpha(),(sz,sz))
@@ -736,7 +740,7 @@ def pr(x,y):
     #DONT DELETE
     p.dr(p.x,p.y)
     for i in bobs:
-        scrn.blit(bobck,(i.x*sz-dx,i.y*sz-dy))
+        scrn.blit(bobcks[i.dir],(i.x*sz-dx,i.y*sz-dy))
         # i.disp((i.y,i.x))
 def getSave():
     global mp
@@ -752,9 +756,14 @@ def getSave():
 def writSave():
     global mp
     rs=[[repr(j)for j in i]for i in p.hold]
+    # print(piler.enc([mp.bit,rs,(p.x,p.y)]))
+    # return
     with open("saveus/save.pile","w")as sv:
         sv.write(piler.enc([mp.bit,rs,(p.x,p.y)]))#piler.enc
-if not True:#intput("Get a new game, or use your old save? (new/old)")=="new":
+        sv.close()
+        del sv
+    print("SAVED")
+if True:#intput("Get a new game, or use your old save? (new/old)")=="new":
     writSave()
 else:
     getSave()
@@ -779,7 +788,7 @@ up,right,down,left,save,w,a,s,d,place,brek,inv,open=pygame.K_UP,pygame.K_RIGHT,p
 po=["",time.time()]
 print(len(mp.bit),len(mp.bit[0]))
 while True:
-        scrn.fill((255,255,255))
+        scrn.fill((200,200,200))
         for i in pygame.event.get():
             if i.type == pygame.QUIT:
                 quit()
@@ -801,7 +810,8 @@ while True:
             elif keys[left]or keys[a]:
                 do="v"
             elif keys[save]:
-                do="u"
+                do="]"
+                writSave()
             elif keys[place]:
                 do="p"
             elif keys[brek]:

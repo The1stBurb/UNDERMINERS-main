@@ -43,9 +43,18 @@ class bob:
         self.nm,self.tp,self.atk,self.sp,self.x,self.y=nm,tp,atk,sp,x,y
         self.s,self.t,self.path=0,xny(self.x,self.y),[]
         self.avp=[]
+        self.dir=2
     def disp(self,d):
         prat(" ",self.x+1,self.y+1)#nots[mapd[self.y][self.x]]
         print()
+        if d[1]<self.x:
+            self.dir=3
+        elif d[1]>self.x:
+            self.dir=1
+        elif d[0]<self.y:
+            self.dir=0
+        elif d[0]>self.y:
+            self.dir=2
         self.y,self.x=d
         prat(self.tp if self.path!=None and len(self.path)>1 else "O",self.x+1,self.y+1)
         print()
@@ -106,7 +115,7 @@ class bob:
             if dec=="newPath":
                 self.getTarget(pr,mapd)
 trol=bob(2,9,"Troll","N",5,1)
-bobs=[]#trol]
+bobs=[trol]
 # for i in range(0,360,6):
 #     prat(f"{i},{sin(i)}",10,10)
 #     prat("@",int(10+sin(i)*5),int(10+cos(i)*5))
