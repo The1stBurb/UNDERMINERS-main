@@ -38,12 +38,56 @@ class xny:
         self.y=y
     def __str__(self):
         return f"{self.x}, {self.y}"
+class PathFinder:
+    def __init__(self):
+        self.grid = []
+        self.rows = 0#len(grid)
+        self.cols = 0#len(grid[0])
+        self.directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+
+    def find_path(self, start, target,grid):
+        self.grid=grid
+        self.rows=len(grid)
+        self.cols=len(grid[0])
+        queue = deque([(start, [])])
+        visited = set()
+
+        while queue:
+            (x, y), path = queue.popleft()
+            
+            if (x, y) == target:
+                return path
+
+            if (x, y) in visited:
+                continue
+
+            visited.add((x, y))
+
+            for dx, dy in self.directions:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.rows and 0 <= ny < self.cols and self.grid[nx][ny] == 0:
+                    new_path = path + [(nx, ny)]
+                    queue.append(((nx, ny), new_path))
+
+        return None  # No path found
+
+    def move_to_target(self, start, target):
+        # path = self.find_path(start, target,grid)
+        # if path:
+        #     print(f"Path found: {path}")
+        #     for step in path:
+        #         print(f"Moving to {step}")
+        #         # Here you would implement the actual movement logic
+        # else:
+        #     print("No path found to target")
+pth=PathFinder()
 class bob:
     def __init__(self,x,y,nm,tp,atk,sp):
         self.nm,self.tp,self.atk,self.sp,self.x,self.y=nm,tp,atk,sp,x,y
         self.s,self.t,self.path=0,xny(self.x,self.y),[]
         self.avp=[]
         self.dir=2
+        self.step=0
     def disp(self,d):
         prat(" ",self.x+1,self.y+1)#nots[mapd[self.y][self.x]]
         print()
@@ -95,25 +139,34 @@ class bob:
         if self.t.x!=self.x and self.t.y!=self.y:
             self.path=[]
     def run(self,mapd,nots,pr):
-        if self.avp==[]:
-            for a,i in enumerate(mapd):
-                for b,j in enumerate(i):
-                    if j==0:
-                        self.avp.append((b,a))
-        # if int(self.x/10)==int(pr.x/10) and int(self.y/10)==int(pr.y/10):
-        #     self.disp((self.y,self.x))
-        self.s+=1
-        if self.path!=None and len(self.path)<=1:#dist(self.x,self.y,self.t.x,self.t.y)
-            self.t.x,self.t.y=-1,-1
-            # prat("as",0,17)
-            self.getTarget(pr,mapd)
-        if self.s>self.sp:
-            # prat(str(len(self.path if self.path!=None else []))+" "*50,0,21)
-            self.s=0
-            dec=self.mve(mapd,nots,pr)
-            # self.disp((self.y,self.x))
-            if dec=="newPath":
-                self.getTarget(pr,mapd)
+        self.path = self.find_path((self.x,self.y), (pr.x,pr.y),mapd)
+        if self.path:
+            # print(f"Path found: {self.path}")
+            if randint(0,5)==0:
+                self.x,self.y=self.path
+                self.step+=1
+                # Here you would implement the actual movement logic
+        else:
+            print("No path found to target")
+        # if self.avp==[]:
+        #     for a,i in enumerate(mapd):
+        #         for b,j in enumerate(i):
+        #             if j==0:
+        #                 self.avp.append((b,a))
+        # # if int(self.x/10)==int(pr.x/10) and int(self.y/10)==int(pr.y/10):
+        # #     self.disp((self.y,self.x))
+        # self.s+=1
+        # if self.path!=None and len(self.path)<=1:#dist(self.x,self.y,self.t.x,self.t.y)
+        #     self.t.x,self.t.y=-1,-1
+        #     # prat("as",0,17)
+        #     self.getTarget(pr,mapd)
+        # if self.s>self.sp:
+        #     # prat(str(len(self.path if self.path!=None else []))+" "*50,0,21)
+        #     self.s=0
+        #     dec=self.mve(mapd,nots,pr)
+        #     # self.disp((self.y,self.x))
+        #     if dec=="newPath":
+        #         self.getTarget(pr,mapd)
 trol=bob(2,9,"Troll","N",5,1)
 bobs=[trol]
 # for i in range(0,360,6):

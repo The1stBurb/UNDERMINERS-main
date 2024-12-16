@@ -16,6 +16,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # Create a logger
 logger = logging.getLogger(__name__)
+print("Your name is Bob! You live here now ig, so i hope yr happy!")
+# input()
 pygame.init()
 X = 1000
 Y = 1000
@@ -748,7 +750,7 @@ def getSave():
     print("\033c")
     with open("saveus/save.pile","r")as sv:
         b=sv.readlines()[0].replace("\n","")
-    evald=eval(piler.dec(b))
+    evald=eval((b))#piler.dec
     mp.bit=evald[0]
     p.hold=[[eval(j) for j in i]for i in evald[1]]
     p.x,p.y=evald[2]
@@ -759,11 +761,11 @@ def writSave():
     # print(piler.enc([mp.bit,rs,(p.x,p.y)]))
     # return
     with open("saveus/save.pile","w")as sv:
-        sv.write(piler.enc([mp.bit,rs,(p.x,p.y)]))#piler.enc
+        sv.write(str([mp.bit,rs,(p.x,p.y)]))#piler.enc
         sv.close()
         del sv
     print("SAVED")
-if True:#intput("Get a new game, or use your old save? (new/old)")=="new":
+if not True:#intput("Get a new game, or use your old save? (new/old)")=="new":
     writSave()
 else:
     getSave()
@@ -784,9 +786,10 @@ def texter():
         prat(pk[-1],len(pk)-9,1)
         print("")
 dev=False
-up,right,down,left,save,w,a,s,d,place,brek,inv,open=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
+up,right,down,left,save,w,a,s,d,place,brek,inv,openChest=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
 po=["",time.time()]
 print(len(mp.bit),len(mp.bit[0]))
+mp.bit
 while True:
         scrn.fill((200,200,200))
         for i in pygame.event.get():
@@ -818,7 +821,7 @@ while True:
                 do="b"
             elif keys[inv]:
                 do="i"
-            elif keys[open]:
+            elif keys[openChest]:
                 do="o"
             if do==po[0] and po[0]!="" and time.time()-po[1]<1:
                 do="b"
