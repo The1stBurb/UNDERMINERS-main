@@ -72,6 +72,7 @@ class PathFinder:
         return None  # No path found
 
     def move_to_target(self, start, target):
+        pass
         # path = self.find_path(start, target,grid)
         # if path:
         #     print(f"Path found: {path}")
@@ -139,14 +140,16 @@ class bob:
         if self.t.x!=self.x and self.t.y!=self.y:
             self.path=[]
     def run(self,mapd,nots,pr):
-        self.path = self.find_path((self.x,self.y), (pr.x,pr.y),mapd)
+        self.path = pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
         if self.path:
-            # print(f"Path found: {self.path}")
-            if randint(0,5)==0:
-                self.x,self.y=self.path
+            print(f"Path found: {self.path}")
+            if randint(0,5)==0 and self.step<len(self.path):
+                self.x,self.y=self.path[self.step]
                 self.step+=1
                 # Here you would implement the actual movement logic
         else:
+            # pass
+            print(self.path)
             print("No path found to target")
         # if self.avp==[]:
         #     for a,i in enumerate(mapd):
