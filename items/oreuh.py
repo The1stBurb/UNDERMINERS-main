@@ -290,6 +290,7 @@ class held:
         self.nm,self.idd,self.id,self.ms,self.dmg=nm,-1,idd2,ms,dmg
         self.col=col
         self.pcb=False
+        self.tp="held"
     def __str__(self):
         return self.nm
     def __repr__(self):
@@ -302,6 +303,7 @@ class pick52(held):
     def __init__(self,nm,idd2,ms,dmg):
         super().__init__(nm,idd2,ms,dmg,col=rock.col)
         self.bfy=[itm(rock,5)]
+        self.tp="pick"
         #rrr
         # r
         # r
@@ -310,30 +312,37 @@ class charcor_pick52(held):
     def __init__(self, nm, idd2, ms, dmg):
         super().__init__(nm, idd2, ms, dmg,col=charcor_ore.col)
         self.bfy=[itm(charcor_ore,3),itm(rock,2)]
+        self.tp="pick"
 class charium_pick52(held):
     def __init__(self, nm, idd2, ms, dmg):
         super().__init__(nm, idd2, ms, dmg,col=charium_ore.col)
         self.bfy=[itm(charium_ore,3),itm(rock,2)]
+        self.tp="pick"
 class nevelium_pick52(held):
     def __init__(self, nm, idd2, ms, dmg):
         super().__init__(nm, idd2, ms, dmg,col=nevelium_ore.col)
         self.bfy=[itm(nevelium_ore,3),itm(rock,2)]
+        self.tp="pick"
 class sword52(held):
     def __init__(self, nm, idd2, ms, dmg):
         super().__init__(nm, idd2, ms, dmg,col=rock.col)
         self.bfy=[itm(rock,3)]
+        self.tp="sword"
 class charcor_sword52(held):
     def __init__(self, nm, idd2, ms, dmg):
         super().__init__(nm, idd2, ms, dmg,col=charcor_ore.col)
         self.bfy=[itm(charcor_ore,2),itm(rock,1)]
+        self.tp="sword"
 class charium_sword52(held):
     def __init__(self, nm, idd2, ms, dmg):
         super().__init__(nm, idd2, ms, dmg,col=charium_ore.col)
         self.bfy=[itm(charium_ore,2),itm(rock,1)]
+        self.tp="sword"
 class nevelium_sword52(held):
     def __init__(self, nm, idd2, ms, dmg):
         super().__init__(nm, idd2, ms, dmg,col=nevelium_ore.col)
         self.bfy=[itm(nevelium_ore,2),itm(rock,1)]
+        self.tp="sword"
 pick=pick52("pick",0,1,1)
 charcor_pick=charcor_pick52("charcor_pick",1,2,1)
 nevelium_pick=nevelium_pick52("nevelium_pick",2,3,2)

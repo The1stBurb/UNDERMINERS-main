@@ -127,6 +127,7 @@ class bob:
         self.dir=2
         self.step=0
         self.ar,self.arr=0,2
+        self.hp=0
     def disp(self,d):
         prat(" ",self.x+1,self.y+1)#nots[mapd[self.y][self.x]]
         print()
@@ -218,7 +219,8 @@ class bob:
         #     if dec=="newPath":
         #         self.getTarget(pr,mapd)
 trol=bob(2,9,"Troll","N",5,1)
-bobs=[trol]
+trol2=bob(3,9,"Toll","N",5,3)
+bobs=[trol,trol2]
 # for i in range(0,360,6):
 #     prat(f"{i},{sin(i)}",10,10)
 #     prat("@",int(10+sin(i)*5),int(10+cos(i)*5))

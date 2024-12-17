@@ -60,7 +60,10 @@ class chest52(brck):
                         else:
                             scrn.blit(colorize(brcck,j.tp.col),(b*110+550,a*110))
                     elif j.tp in hts:
-                        scrn.blit(colorize(picck,j.tp.col),(b*110+560,a*110))
+                        if j.tp.tp=="pick":
+                            scrn.blit(colorize(picck,j.tp.col),(b*110+560,a*110))
+                        elif j.tp.tp=="sword":
+                            scrn.blit(colorize(swrocc,j.tp.col),(b*110+560,a*110))
                     text(f"{j.no}x {j.tp.nm}",b*110+560,a*110+85)
             rect(900,900,100,100,col=(255,0,0))
             text("EXIT",900,900)
@@ -389,6 +392,9 @@ class plr:
         self.hl=0
         self.mhp=10
         self.hp=self.mhp
+        self.atk=1
+        self.atkr=0
+        self.ar=5
         self.hold=[
             [itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
             [itm(pick,1),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],]
@@ -408,11 +414,20 @@ class plr:
             if i.tp in nts:
                 scrn.blit(colorize(brcck,i.tp.col),(a*110,900))
             elif i.tp in hts:
-                scrn.blit(colorize(picck,i.tp.col),(a*110+10,920))
+                if i.tp.tp=="pick":
+                    scrn.blit(colorize(picck,i.tp.col),(a*110+10,900))
+                elif i.tp.tp=="sword":
+                    scrn.blit(colorize(swrocc,i.tp.col),(a*110+10,900))
             scrn.blit(font.render(f"{i.no}x {i.tp.nm}", True, (0, 0, 0)),(a*110+10,975))
     def move(self,d):
         global mp
-        if d=="b":
+        if d=="atk"and self.atkr>=self.ar:
+            self.atkr=0
+            for i in bobs:
+                if (abs(i.x-self.x)<2 or abs(i.y-self.y)<2):
+                    i.hp-=self.atk
+            return
+        elif d=="b":
             dr=gd(self.dir)
             nx,ny=self.x+dr[0],self.y+dr[1]
             self.addItm()#nts[mp.bit[ny][nx]])
@@ -545,7 +560,10 @@ class plr:
                         else:
                             scrn.blit(colorize(brcck,j.tp.col),(b*110,a*110))
                     elif j.tp in hts:
-                        scrn.blit(colorize(picck,j.tp.col),(b*110+10,a*110))
+                        if j.tp.tp=="pick":
+                            scrn.blit(colorize(picck,j.tp.col),(b*110+10,a*110))
+                        elif j.tp.tp=="sword":
+                            scrn.blit(colorize(swrocc,j.tp.col),(b*110+10,a*110))
                     text(f"{j.no}x {j.tp.nm}",b*110+10,a*110+85)
             rect(900,900,100,100,col=(255,0,0))
             text("EXIT",900,900)
@@ -637,7 +655,10 @@ class plr:
                         else:
                             scrn.blit(colorize(brcck,j.tp.col),(b*110,a*110))
                     elif j.tp in hts:
-                        scrn.blit(colorize(picck,j.tp.col),(b*110+10,a*110))
+                        if j.tp.tp=="pick":
+                            scrn.blit(colorize(picck,j.tp.col),(b*110+10,a*110))
+                        elif j.tp.tp=="sword":
+                            scrn.blit(colorize(swrocc,j.tp.col),(b*110+10,a*110))
                     text(f"{j.no}x {j.tp.nm}",b*110+10,a*110+85)
     def addItm(self,item):
         if not isinstance(item,itm):
@@ -667,7 +688,7 @@ class plr:
         # if cc=="":
             # cc=repr("\033[48;2;0;0;0m")
         # cc=cc[:-2].split(";")
-        g,b,r=int(cc[2]),int(cc[1]),int(cc[0])
+        b,g,r=int(cc[2]),int(cc[1]),int(cc[0])
         # r=g=b=0
         ms=xny(-1,-1)
         # x1=x2=y1=y2=-1
@@ -759,6 +780,7 @@ brcck = pygame.transform.scale(pygame.image.load("images\\brick_base.png").conve
 vbrcck=brcck
 vbrcck.set_alpha(0)
 picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
+swrocc=pygame.transform.scale(pygame.image.load("images\\sword_base.png").convert_alpha(),(60,60))
 bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
 bobcks=[pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),]
 rocck=pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz))
@@ -798,6 +820,8 @@ def pr(x,y):
     p.dr(p.x,p.y)
     for i in bobs:
         scrn.blit(bobcks[i.dir],(i.x*sz-dx,i.y*sz-dy))
+        if not i.hp>0:
+            del i
         # i.disp((i.y,i.x))
 def getSave():
     global mp
