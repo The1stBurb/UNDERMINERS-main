@@ -789,7 +789,7 @@ dev=False
 up,right,down,left,save,w,a,s,d,place,brek,inv,openChest=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
 po=["",time.time()]
 print(len(mp.bit),len(mp.bit[0]))
-mp.bit
+# mp.bit
 while True:
         scrn.fill((200,200,200))
         for i in pygame.event.get():
