@@ -670,11 +670,11 @@ vbrcck=brcck
 vbrcck.set_alpha(0)
 picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
 swrocc=pygame.transform.scale(pygame.image.load("images\\sword_base.png").convert_alpha(),(60,60))
-bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
+# bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
 bobcks=[
 [pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),],
 [pygame.transform.scale(pygame.image.load("images\\Spagler\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\left.png").convert_alpha(),(sz,sz)),],
-# [pygame.transform.scale(pygame.image.load("images\\Phuflee\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\left.png").convert_alpha(),(sz,sz)),],
+[pygame.transform.scale(pygame.image.load("images\\Phuflee\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\left.png").convert_alpha(),(sz,sz)),],
 ]
 rocck=pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz))
 ore=pygame.transform.scale(pygame.image.load("images\\ore_spots.png").convert_alpha(),(sz,sz))
@@ -782,7 +782,7 @@ while True:
         #     br.ys+=1
     keys=pygame.key.get_pressed()
     do=""
-    if time.time()-po[1]>0.3:
+    if time.time()-po[1]>0.2:
         if keys[up]or keys[w]:
             do="z"
         elif keys[right]or keys[d]:
@@ -829,7 +829,7 @@ while True:
     pr(p.x,p.y)
     # scrn.blit(font.render(f"{mbt},", True, (2,0,0)),(0,0))
     pygame.display.flip()
-    if tck/50>randint(10,15):
+    if tck/50>5:#randint(10,15):
         tck=0
         print("HYE",tck)
         works=True

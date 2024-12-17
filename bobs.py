@@ -185,7 +185,7 @@ class bob:
             print("atk")
             pr.hp-=self.atk
             self.ar=self.arr
-        if randint(0,50)==0 and self.t.x!=pr.x and self.t.y!=pr.y:
+        if randint(0,40)==0 and self.t.x!=pr.x and self.t.y!=pr.y:
             self.t.x,self.t.y=(pr.x,pr.y)
             self.path = solve_maze(mapd,(self.y,self.x),(self.t.y,self.t.x))#pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
             self.step=0
@@ -193,7 +193,17 @@ class bob:
             # print(f"Path found: {self.path}")
             self.step+=0.01
             if randint(0,5)==0 and self.step>self.sp:
-                self.y,self.x=self.path[0]
+                # self.y,self.x
+                d=self.path[0]
+                if d[1]<self.x:
+                    self.dir=3
+                elif d[1]>self.x:
+                    self.dir=1
+                elif d[0]<self.y:
+                    self.dir=0
+                elif d[0]>self.y:
+                    self.dir=2
+                self.y,self.x=d
                 self.path.remove(self.path[0])
                 self.step=0
                 # self.step+=1
