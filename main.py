@@ -387,13 +387,20 @@ class plr:
         self.dir=1
         self.us=[pygame.transform.scale(pygame.image.load("images\\UP.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\RIGHT.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\DOWn.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\LEFT.png").convert_alpha(),(sz,sz))]#"^",">","V","<"]
         self.hl=0
+        self.mhp=10
+        self.hp=self.mhp
         self.hold=[
             [itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
             [itm(pick,1),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],]
     def dr(self,ox,oy):
         # rect(self.x*sz,self.y*sz,sz,sz,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
         # rect(4.5*sz,4.5*sz,sz,sz,col=((255 if self.dir==0 or self.dir==3 else 0),(255 if self.dir==1 or self.dir==3 else 0),(255 if self.dir==2 or self.dir==3 else 0)))
+        hl=100/self.mhp
+        ys=800
+        xs=10
+        quad(xs,ys,xs+10+self.hp*hl,ys,xs+self.hp*hl,ys+20,xs,ys+20,col=((0,0,0)if self.hp<hl else (0,255,0)))
         scrn.blit(self.us[self.dir],(4.5*sz,4.5*sz))
+        rect(self.hl*110,900,110,100,col=(100,100,100))
         for a,i in enumerate(self.hold[5]):
             # logger.debug(i.tp.col)
             # if i.tp.nm!="void":
@@ -544,7 +551,9 @@ class plr:
             text("EXIT",900,900)
             rect(650,0,50,20,col=(200,200,200))
             text("MOVE",652,2)
-            text(f"{ms.x},{ms.y},{int(ms.x/110)},{int(ms.y/110)}",0,900)
+            rect(650,30,60,20,col=(200,200,200))
+            text("COLOUR",652,32)
+            # text(f"{ms.x},{ms.y},{int(ms.x/110)},{int(ms.y/110)}",0,900)
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     quit()
@@ -552,6 +561,9 @@ class plr:
                     ms.x,ms.y=pygame.mouse.get_pos()
             if ms.x>900 and ms.y>900:
                 return
+            elif ms.x>650 and ms.x<700 and ms.y>30 and ms.y<50 and x1!=-1 and y1!=-1:
+                self.colourify(x1,y1)
+                x1=y1=-1
             elif ms.x<650 and ms.y<750 and ms.x>0 and ms.y>0:
                 x,y=int(ms.x/110),int(ms.y/110)
                 print(x,y)
@@ -650,44 +662,85 @@ class plr:
     def hnd(self):
         return self.hold[5][self.hl]
     def colourify(self,ix,iy):
-        cc=repr(self.hold[iy][ix].tp.col)
-        if cc=="":
-            cc=repr("\033[48;2;0;0;0m")
-        cc=cc[:-2].split(";")
-        g,b,r=int(cc[-1]),int(cc[-2]),int(cc[-3])
-        print("\033c",end="")
-        px,py=0,0
-        ppx,ppy=px,py
-        while not True:
-                sleep(0.5)
-                do=keyboard.read_key()
-                if do=="up"and py>0:
-                    py-=1
-                elif do=="right"and px<15:
-                    px+=1
-                elif do=="down"and py<15:
-                    py+=1
-                elif do=="left"and px>0:
-                    px-=1
-                elif do=="enter":
-                    break
-                if ppx!=px and ppy!=py:
-                    prat(" ",ppx+1,ppy+1)
-                    print("")
-                    prat("#",px+1,py+1)
-                    print("")
-                    prat(f"r:{(8-px+8-py)/2}, b:{(px+8-py)/2}, g:{(8-px+py)/2}",1,18)
-                    print("")
-                    ppx,ppy=px,py
+        print(ix,iy,"ooga")
+        cc=self.hold[iy][ix].tp.col#repr()
+        # if cc=="":
+            # cc=repr("\033[48;2;0;0;0m")
+        # cc=cc[:-2].split(";")
+        g,b,r=int(cc[2]),int(cc[1]),int(cc[0])
+        # r=g=b=0
+        ms=xny(-1,-1)
+        # x1=x2=y1=y2=-1
         while True:
-            r=gtInt("What do you want the red to be?",0,255)
-            g=gtInt("What do you want the green to be?",0,255)
-            b=gtInt("What do you want the blue to be?",0,255)
-            good=intput(f"\033[48;2;{r};{g};{b}mIs this the right color? (y/n)\033[0m")
-            if good=="y":
-                break
-        self.hold[iy][ix].tp.col=f"\033c[48;2;{r};{g};{b}"
-        print(repr(self.hold[iy][ix].tp.col))
+            scrn.fill((255,255,255))
+            rect(100,0,255,255,col=(r,g,b))
+            rect(0,0,30,255,col=(r,0,0))
+            text(str(r),2,257,col=(0,0,0))
+            rect(40,0,30,255,col=(0,g,0))
+            text(str(g),42,257,col=(0,0,0))
+            rect(90,0,30,255,col=(0,0,b))
+            text(str(b),92,257,col=(0,0,0))
+            rect(0,r,30,10,col=(255,255,255))
+            rect(40,g,30,10,col=(255,255,255))
+            rect(90,b,30,10,col=(255,255,255))
+            rect(900,900,100,100,col=(255,0,0))
+            text("EXIT",900,900)
+            text(f"{ms.x},{ms.y},{int(ms.x/110)},{int(ms.y/110)}",0,900)
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    quit()
+            if pygame.mouse.get_pressed()[0]:
+                ms.x,ms.y=pygame.mouse.get_pos()
+            # if ms.x<=255 and ms.y<=255:
+            #     mx=constrain(ms.x,0,255)
+            #     my=constrain(ms.y,0,255)
+            #     r=((255-mx)+(255-my))/2
+            #     g=((255-my)+0)/2
+            #     b=(0+(255-mx))/2
+            if ms.x<30 and ms.y<255 and ms.x>0 and ms.y>0:
+                r=ms.y
+            elif ms.x>40 and ms.x<70 and ms.y<255 and ms.y>0:
+                g=ms.y
+            elif ms.x>90 and ms.x<120 and ms.y<255 and ms.y>0:
+                b=ms.y
+            elif ms.x>900 and ms.y>900:
+                self.hold[iy][ix].tp.col=(r,g,b)
+                return
+            pygame.display.flip()
+            ms.x,ms.y=-1,-1
+        # print("\033c",end="")
+        # px,py=0,0
+        # ppx,ppy=px,py
+        # while not True:
+        #         sleep(0.5)
+        #         do=keyboard.read_key()
+        #         if do=="up"and py>0:
+        #             py-=1
+        #         elif do=="right"and px<15:
+        #             px+=1
+        #         elif do=="down"and py<15:
+        #             py+=1
+        #         elif do=="left"and px>0:
+        #             px-=1
+        #         elif do=="enter":
+        #             break
+        #         if ppx!=px and ppy!=py:
+        #             prat(" ",ppx+1,ppy+1)
+        #             print("")
+        #             prat("#",px+1,py+1)
+        #             print("")
+        #             prat(f"r:{(8-px+8-py)/2}, b:{(px+8-py)/2}, g:{(8-px+py)/2}",1,18)
+        #             print("")
+        #             ppx,ppy=px,py
+        # while True:
+        #     r=gtInt("What do you want the red to be?",0,255)
+        #     g=gtInt("What do you want the green to be?",0,255)
+        #     b=gtInt("What do you want the blue to be?",0,255)
+        #     good=intput(f"\033[48;2;{r};{g};{b}mIs this the right color? (y/n)\033[0m")
+        #     if good=="y":
+        #         break
+        # self.hold[iy][ix].tp.col=f"\033c[48;2;{r};{g};{b}"
+        # print(repr(self.hold[iy][ix].tp.col))
 p=plr()
 
 mp=MP()
@@ -700,6 +753,8 @@ def rect(x,y,w,h,col=(255,255,255)):
     pygame.draw.rect(scrn, col, pygame.Rect(x, y, w, h))
 def text(txt,x,y,col=(0,0,0)):
     scrn.blit(font.render(txt, True, col),(x,y))
+def quad(x1,y1,x2,y2,x3,y3,x4,y4,col=(255,255,255)):
+    pygame.draw.polygon(scrn, col, [(x1,y1),(x2,y2),(x3,y3),(x4,y4),])
 brcck = pygame.transform.scale(pygame.image.load("images\\brick_base.png").convert_alpha(),(100,100))
 vbrcck=brcck
 vbrcck.set_alpha(0)
@@ -787,17 +842,22 @@ def texter():
         print("")
 dev=False
 up,right,down,left,save,w,a,s,d,place,brek,inv,openChest=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
+k1,k2,k3,k4,k5=pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5
 po=["",time.time()]
 print(len(mp.bit),len(mp.bit[0]))
 # mp.bit
+mbt=0
 while True:
         scrn.fill((200,200,200))
+        # mbt=1
         for i in pygame.event.get():
             if i.type == pygame.QUIT:
                 quit()
             elif i.type==pygame.KEYDOWN:
                 if i.key==pygame.K_SPACE:
                     kd=True
+            elif i.type==pygame.MOUSEBUTTONDOWN:
+                mbt=i.button
             #DONT DELETE
             # if i.key==py.K_LSHIFT:# and br.ys<3:
             #     br.ys+=1
@@ -815,14 +875,26 @@ while True:
             elif keys[save]:
                 do="]"
                 writSave()
-            elif keys[place]:
+            elif keys[place]or mbt==3:
+                mbt=0
                 do="p"
-            elif keys[brek]:
+            elif keys[brek]or mbt==1:
+                mbt=0
                 do="b"
             elif keys[inv]:
                 do="i"
             elif keys[openChest]:
                 do="o"
+            elif keys[k1]:
+                do="1"
+            elif keys[k2]:
+                do="2"
+            elif keys[k3]:
+                do="3"
+            elif keys[k4]:
+                do="4"
+            elif keys[k5]:
+                do="5"
             if do==po[0] and po[0]!="" and time.time()-po[1]<1:
                 do="b"
             po=[do,time.time()]
@@ -833,7 +905,7 @@ while True:
         for i in bobs:
             i.run(mp.bit,[],p)
         pr(p.x,p.y)
-        scrn.blit(font.render(f"{do},", True, (255, 255, 255)),(0,0))
+        # scrn.blit(font.render(f"{mbt},", True, (2,0,0)),(0,0))
         pygame.display.flip()
 while not True:
     fps.run()

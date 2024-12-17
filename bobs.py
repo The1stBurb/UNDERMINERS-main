@@ -82,6 +82,43 @@ class PathFinder:
         # else:
         #     print("No path found to target")
 pth=PathFinder()
+# from collections import deque
+
+def solve_maze(maze, start, end):
+    rows = len(maze)
+    cols = len(maze[0])
+    
+    # Define possible movements (up, right, down, left)
+    directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+    
+    # Create a queue for BFS
+    queue = deque([(start[0], start[1], [])])
+    
+    # Create a visited set
+    visited = set([(start[0], start[1])])
+    
+    while queue:
+        x, y, path = queue.popleft()
+        
+        # Check if we've reached the end
+        if (x, y) == end:
+            return path
+        
+        # Explore all directions
+        for dx, dy in directions:
+            new_x, new_y = x + dx, y + dy
+            
+            # Check if the new position is valid and not visited
+            if (0 <= new_x < rows and 0 <= new_y < cols and
+                maze[new_x][new_y] ==0  and (new_x, new_y) not in visited):
+                
+                visited.add((new_x, new_y))
+                new_path = path + [(new_x, new_y)]
+                queue.append((new_x, new_y, new_path))
+    
+    # If no path is found
+    return None
+
 class bob:
     def __init__(self,x,y,nm,tp,atk,sp):
         self.nm,self.tp,self.atk,self.sp,self.x,self.y=nm,tp,atk,sp,x,y
@@ -89,6 +126,7 @@ class bob:
         self.avp=[]
         self.dir=2
         self.step=0
+        self.ar,self.arr=0,2
     def disp(self,d):
         prat(" ",self.x+1,self.y+1)#nots[mapd[self.y][self.x]]
         print()
@@ -140,17 +178,26 @@ class bob:
         if self.t.x!=self.x and self.t.y!=self.y:
             self.path=[]
     def run(self,mapd,nots,pr):
-        self.path = pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
+        # self.path = pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)#navigate_maze(mapd,(self.x,self.y),(self.t.x,self.t.y))#
+        self.ar-=0.1
+        if (abs(self.x-pr.x)<2 or abs(self.x-pr.x)<2)and self.ar<0:
+            pr.hp-=self.atk
+            self.ar=self.arr
         if self.path:
-            print(f"Path found: {self.path}")
-            if randint(0,5)==0 and self.step<len(self.path):
-                self.x,self.y=self.path[self.step]
-                self.step+=1
+            # print(f"Path found: {self.path}")
+            self.step+=0.01
+            if randint(0,5)==0 and self.step>self.sp:
+                self.y,self.x=self.path[0]
+                self.path.remove(self.path[0])
+                self.step=0
+                # self.step+=1
                 # Here you would implement the actual movement logic
         else:
-            # pass
-            print(self.path)
-            print("No path found to target")
+            self.path = solve_maze(mapd,(self.y,self.x),(pr.y,pr.x))#pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
+            self.step=0
+            pass
+            # print(self.path)
+            # print("No path found to target")
         # if self.avp==[]:
         #     for a,i in enumerate(mapd):
         #         for b,j in enumerate(i):
