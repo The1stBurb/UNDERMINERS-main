@@ -126,8 +126,8 @@ class bob:
         self.avp=[]
         self.dir=2
         self.step=0
-        self.ar,self.arr=0,2
-        self.hp=0
+        self.ar,self.arr=0,sp
+        self.hp=1
     def disp(self,d):
         prat(" ",self.x+1,self.y+1)#nots[mapd[self.y][self.x]]
         print()
@@ -180,10 +180,15 @@ class bob:
             self.path=[]
     def run(self,mapd,nots,pr):
         # self.path = pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)#navigate_maze(mapd,(self.x,self.y),(self.t.x,self.t.y))#
-        self.ar-=0.1
-        if (abs(self.x-pr.x)<2 or abs(self.x-pr.x)<2)and self.ar<0:
+        self.ar-=0.05
+        if (abs(self.x-pr.x)<1 and abs(self.y-pr.y)<1)and self.ar<0:
+            print("atk")
             pr.hp-=self.atk
             self.ar=self.arr
+        if randint(0,50)==0 and self.t.x!=pr.x and self.t.y!=pr.y:
+            self.t.x,self.t.y=(pr.x,pr.y)
+            self.path = solve_maze(mapd,(self.y,self.x),(self.t.y,self.t.x))#pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
+            self.step=0
         if self.path:
             # print(f"Path found: {self.path}")
             self.step+=0.01
@@ -194,7 +199,8 @@ class bob:
                 # self.step+=1
                 # Here you would implement the actual movement logic
         else:
-            self.path = solve_maze(mapd,(self.y,self.x),(pr.y,pr.x))#pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
+            self.t.x,self.t.y=(pr.x,pr.y)
+            self.path = solve_maze(mapd,(self.y,self.x),(self.t.y,self.t.x))#pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
             self.step=0
             pass
             # print(self.path)
@@ -218,9 +224,20 @@ class bob:
         #     # self.disp((self.y,self.x))
         #     if dec=="newPath":
         #         self.getTarget(pr,mapd)
-trol=bob(2,9,"Troll","N",5,1)
-trol2=bob(3,9,"Toll","N",5,3)
-bobs=[trol,trol2]
+# trol=bob(2,9,"Troll","N",2,1)
+# trol2=bob(3,9,"Toll","N",2,3)
+def gloop(x,y):
+    return bob(x,y,"Gelatinous Gloop",0,2,1)
+def spagler(x,y):
+    return bob(x,y,"Spagler",1,3,2)
+def phuflee(x,y):
+    return bob(x,y,"Phuflee",2,1,0.3)
+boblst=[
+    gloop,
+    spagler,
+    phuflee,
+]
+bobs=[]
 # for i in range(0,360,6):
 #     prat(f"{i},{sin(i)}",10,10)
 #     prat("@",int(10+sin(i)*5),int(10+cos(i)*5))

@@ -1,7 +1,7 @@
 #https://docs.google.com/document/d/1c2sKY1Q4PDsK8h_j1TRbw3K_OkEq5jbrHTj6mb4z3LY/edit?tab=t.0
 from items.oreuh import brck,nts,no_rock,placed_rock,rock,dark_rock,charium_ore,nevelium_ore,decante_ore,charcor_ore,void,dirt,hts,pick,charcor_pick,nevelium_pick,sword,charcor_sword,charium_sword,nevelium_sword,burb,craft
 from base_funcs import *
-from bobs import xny,bobs
+from bobs import xny,bobs,boblst
 from Loot.looter import gitStf
 
 from time import sleep
@@ -155,7 +155,7 @@ class mos:
     def __str__(self):
         g=self.get()
         return f"{round(g.x)},{round(g.y)}"
-clickify=False#intput("Do you want to use your mouse? This DOESN'T ALWAYS work. Proceed with caution. (y/n)")=="y"
+clickify=False
 m=mos(clickify)
 def roll():
     rolled=[]
@@ -338,8 +338,8 @@ class MP:
             self.addLft()
         if dirr in [0,1,2,3]:
             self.exp()
-        move(0,12)
-        print(dirr,self.tl)
+        # move(0,12)
+        # print(dirr,self.tl)
     #not needed, would expand the map. idk if well finish and add
     def exp(self):
         #we want every top of the tiles across
@@ -375,12 +375,6 @@ def colorize(image, new_color):
     tinted.fill(new_color)
     tinted.blit(image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
     return tinted
-    """
-    Create a "colorized" version of the image.
-    """
-    image = image.copy()
-    image.fill(new_color[0:3] + (0,), special_flags=py.BLEND_RGBA_MULT)
-    return image
 class plr:
     def __init__(self):
         self.x=0
@@ -404,13 +398,12 @@ class plr:
         hl=100/self.mhp
         ys=800
         xs=10
-        quad(xs,ys,xs+10+self.hp*hl,ys,xs+self.hp*hl,ys+20,xs,ys+20,col=((0,0,0)if self.hp<hl else (0,255,0)))
+        # quad(xs,ys,xs+10+self.hp*hl,ys,xs+self.hp*hl,ys+20,xs,ys+20,col=((0,0,0)if self.hp<hl else (0,255,0)))
+        rect(0,ys,self.hp*hl,20,col=(0,255,0))
+        text(f"Hp: {int(self.hp/self.mhp*100)}%",0,ys)
         scrn.blit(self.us[self.dir],(4.5*sz,4.5*sz))
         rect(self.hl*110,900,110,100,col=(100,100,100))
         for a,i in enumerate(self.hold[5]):
-            # logger.debug(i.tp.col)
-            # if i.tp.nm!="void":
-                # print(issubclass(i.tp,brck))
             if i.tp in nts:
                 scrn.blit(colorize(brcck,i.tp.col),(a*110,900))
             elif i.tp in hts:
@@ -419,38 +412,6 @@ class plr:
                 elif i.tp.tp=="sword":
                     scrn.blit(colorize(swrocc,i.tp.col),(a*110+10,900))
             scrn.blit(font.render(f"{i.no}x {i.tp.nm}", True, (0, 0, 0)),(a*110+10,975))
-    def move(self,d):
-        global mp
-        if d=="atk"and self.atkr>=self.ar:
-            self.atkr=0
-            for i in bobs:
-                if (abs(i.x-self.x)<2 or abs(i.y-self.y)<2):
-                    i.hp-=self.atk
-            return
-        elif d=="b":
-            dr=gd(self.dir)
-            nx,ny=self.x+dr[0],self.y+dr[1]
-            self.addItm()#nts[mp.bit[ny][nx]])
-            mp.bit[ny][nx]=0
-            # move(nx+1,ny+1)
-            # print(no_rock)
-        elif d=="z":
-            self.dir=0
-        elif d=="x":
-            self.dir=1
-        elif d=="c":
-            self.dir=2
-        elif d=="v":
-            self.dir=3
-        ox,oy=self.x,self.y
-        dx=self.x+gd(self.dir)[0]
-        dy=self.y+gd(self.dir)[1]
-        tk=0
-        if dx>=0 and dx<=9 and dy>=0 and dy<=9:
-            tk=mp.getTile().bit[dy][dx]
-        if tk==0:
-            self.x,self.y=dx,dy
-        self.dr(ox,oy)
     def oub(self):
         global mp,pr
         isd=False
@@ -475,7 +436,18 @@ class plr:
             pr(0,0)
     def mover(self,d):
         global mp
-        if d.isdigit() and inr(int(d)-1,0,5):
+        self.atkr+=0.1
+        if d=="atk":
+            # print("ou")
+            if self.atkr>=self.ar:
+                self.atkr=0
+                # print("ouch")
+                for i in bobs:
+                    if (abs(i.x-self.x)<2 and abs(i.y-self.y)<2):
+                        i.hp-=self.atk+self.hnd().tp.atk
+                        # print("bonk")
+            return
+        elif d.isdigit() and inr(int(d)-1,0,5):
             self.hl=int(d)-1
             return
         elif d=="]":
@@ -526,23 +498,22 @@ class plr:
                             self.addItm(j)
                 self.addItm(nts[mp.bit[ny][nx]])
                 mp.bit[ny][nx]=0
-                move(nx+1,ny+1)
-                print(no_rock)
+                # move(nx+1,ny+1)
+                # print(no_rock)
         elif d in "zxcv":
             pd=self.dir
             self.dir={"z":0,"x":1,"c":2,"v":3}[d]
             if pd!=self.dir:
                 return
-        mv=gd(self.dir)
-        drw=(self.x%10 and self.dir==1) or ((self.x-1)%10 and self.dir==3)or(self.y%10 and self.dir==2) or ((self.y-1)%10 and self.dir==0)
-        self.y=1 if self.y+mv[1]<0 else(len(mp.bit)-2 if self.y+mv[1]>len(mp.bit)-1 else self.y)
-        self.x=1 if self.x+mv[0]<0 else(len(mp.bit[self.y+mv[1]])-2 if self.x+mv[0]>len(mp.bit[self.y+mv[1]])-1 else self.x)
-        if self.y+mv[1]>=0 and self.y+mv[1]<len(mp.bit) and self.x+mv[0]>=0 and self.x+mv[0]<len(mp.bit[self.y+mv[1]]):
-            if mp.bit[self.y+mv[1]][self.x+mv[0]]==0:
-                self.y,self.x=self.y+mv[1],self.x+mv[0]
+        if d in["z","x","c","v","b"]:
+            mv=gd(self.dir)
+            drw=(self.x%10 and self.dir==1) or ((self.x-1)%10 and self.dir==3)or(self.y%10 and self.dir==2) or ((self.y-1)%10 and self.dir==0)
+            self.y=1 if self.y+mv[1]<0 else(len(mp.bit)-2 if self.y+mv[1]>len(mp.bit)-1 else self.y)
+            self.x=1 if self.x+mv[0]<0 else(len(mp.bit[self.y+mv[1]])-2 if self.x+mv[0]>len(mp.bit[self.y+mv[1]])-1 else self.x)
+            if self.y+mv[1]>=0 and self.y+mv[1]<len(mp.bit) and self.x+mv[0]>=0 and self.x+mv[0]<len(mp.bit[self.y+mv[1]]):
+                if mp.bit[self.y+mv[1]][self.x+mv[0]]==0:
+                    self.y,self.x=self.y+mv[1],self.x+mv[0]
         self.dr(self.x-mv[0],self.y-mv[1])
-        if drw:
-            pr(self.x,self.y)
     def prInv(self):
         ms=xny(-1,-1)
         x1=x2=y1=y2=-1
@@ -603,50 +574,7 @@ class plr:
                 x1=x2=y1=y2=-1
             pygame.display.flip()
             ms.x,ms.y=-1,-1
-            # rght,_,_=pygame.mouse.get_pressed()
-            # if rght and pr==False:
-            #     ms=xny()
-    # def prInv2(self):
-    #     keyboard.send("backspace")
-    #     while True:
-    #         print("\033c")
-    #         for b in range(5):
-    #             prat(b+1,b*16+3,1)
-    #         print("|")
-    #         for a,i in enumerate(self.hold):
-    #             prat(a+1,1,a+(3 if a==5 else 2))
-    #             for b,j in enumerate(i):
-    #                 prat("|"+str(j),(b)*16+3,(a)+(3 if a==5 else 2))
-    #             print("|")
-    #         print("\nRow 6 is the bar you can access anytime! |EXIT|")
-    #         dor=intput("Would you like to move an item, custom color an item, craft or exit? (move,craft,exit,colour)")
-    #         if dor=="move":
-    #             x1,y1=gtInt("What is the X coordinate of the item?",1,5),gtInt("Whats the Y?",1,6)
-    #             x2,y2=gtInt("What is the X coordinate of where you to move it?",1,5),gtInt("What is the Y?",1,6)
-    #             # print(x1,y1,x2,y2)
-    #             it1=self.hold[y1-1][x1-1]
-    #             it2=self.hold[y2-1][x2-1]
-    #             if it1.tp.nm==it2.tp.nm:
-    #                 it1.no+=it2.no
-    #                 it2=itm(void,0)
-    #             self.hold[y1-1][x1-1],self.hold[y2-1][x2-1]=it2,it1
-    #         elif dor=="exit":
-    #             print("Exiting...")
-    #             sleep(0.5)
-    #             print("\033c")
-    #             return
-    #         elif dor=="craft":
-    #             craft(self)
-    #         elif dor=="colour":
-    #             x1,y1=gtInt("What is the X coordinate of the item?",1,5),gtInt("Whats the Y?",1,6)
-    #             self.colourify(x1,y1)
     def prInv1(self):
-        # for b in range(5):
-        #     prat(b+1,b*16+3,1)
-        # for a,i in enumerate(self.hold):
-        #     prat(a+1,1,a+(3 if a==5 else 2))
-        #     for b,j in enumerate(i):
-        #         prat("|"+str(j),(b)*16+3,(a)+(3 if a==5 else 2))
         for a,i in enumerate(self.hold):
                 for b,j in enumerate(i):
                     if j.tp in nts:
@@ -712,12 +640,6 @@ class plr:
                     quit()
             if pygame.mouse.get_pressed()[0]:
                 ms.x,ms.y=pygame.mouse.get_pos()
-            # if ms.x<=255 and ms.y<=255:
-            #     mx=constrain(ms.x,0,255)
-            #     my=constrain(ms.y,0,255)
-            #     r=((255-mx)+(255-my))/2
-            #     g=((255-my)+0)/2
-            #     b=(0+(255-mx))/2
             if ms.x<30 and ms.y<255 and ms.x>0 and ms.y>0:
                 r=ms.y
             elif ms.x>40 and ms.x<70 and ms.y<255 and ms.y>0:
@@ -729,39 +651,6 @@ class plr:
                 return
             pygame.display.flip()
             ms.x,ms.y=-1,-1
-        # print("\033c",end="")
-        # px,py=0,0
-        # ppx,ppy=px,py
-        # while not True:
-        #         sleep(0.5)
-        #         do=keyboard.read_key()
-        #         if do=="up"and py>0:
-        #             py-=1
-        #         elif do=="right"and px<15:
-        #             px+=1
-        #         elif do=="down"and py<15:
-        #             py+=1
-        #         elif do=="left"and px>0:
-        #             px-=1
-        #         elif do=="enter":
-        #             break
-        #         if ppx!=px and ppy!=py:
-        #             prat(" ",ppx+1,ppy+1)
-        #             print("")
-        #             prat("#",px+1,py+1)
-        #             print("")
-        #             prat(f"r:{(8-px+8-py)/2}, b:{(px+8-py)/2}, g:{(8-px+py)/2}",1,18)
-        #             print("")
-        #             ppx,ppy=px,py
-        # while True:
-        #     r=gtInt("What do you want the red to be?",0,255)
-        #     g=gtInt("What do you want the green to be?",0,255)
-        #     b=gtInt("What do you want the blue to be?",0,255)
-        #     good=intput(f"\033[48;2;{r};{g};{b}mIs this the right color? (y/n)\033[0m")
-        #     if good=="y":
-        #         break
-        # self.hold[iy][ix].tp.col=f"\033c[48;2;{r};{g};{b}"
-        # print(repr(self.hold[iy][ix].tp.col))
 p=plr()
 
 mp=MP()
@@ -782,7 +671,11 @@ vbrcck.set_alpha(0)
 picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").convert_alpha(),(60,60))
 swrocc=pygame.transform.scale(pygame.image.load("images\\sword_base.png").convert_alpha(),(60,60))
 bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
-bobcks=[pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),]
+bobcks=[
+[pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),],
+[pygame.transform.scale(pygame.image.load("images\\Spagler\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\left.png").convert_alpha(),(sz,sz)),],
+# [pygame.transform.scale(pygame.image.load("images\\Phuflee\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\left.png").convert_alpha(),(sz,sz)),],
+]
 rocck=pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz))
 ore=pygame.transform.scale(pygame.image.load("images\\ore_spots.png").convert_alpha(),(sz,sz))
 cchest=pygame.transform.scale(pygame.image.load("images\\chest_base.png").convert_alpha(),(sz,sz))
@@ -818,10 +711,11 @@ def pr(x,y):
                 rect(j*sz-dx,i*sz-dy,sz,sz,(0,0,0))
     #DONT DELETE
     p.dr(p.x,p.y)
+    ktp=[]
     for i in bobs:
-        scrn.blit(bobcks[i.dir],(i.x*sz-dx,i.y*sz-dy))
+        scrn.blit(bobcks[i.tp][i.dir],(i.x*sz-dx,i.y*sz-dy))
         if not i.hp>0:
-            del i
+            bobs.remove(i)
         # i.disp((i.y,i.x))
 def getSave():
     global mp
@@ -865,117 +759,84 @@ def texter():
         prat(pk[-1],len(pk)-9,1)
         print("")
 dev=False
-up,right,down,left,save,w,a,s,d,place,brek,inv,openChest=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o
+up,right,down,left,save,w,a,s,d,place,brek,inv,openChest,space=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o,pygame.K_SPACE
 k1,k2,k3,k4,k5=pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5
 po=["",time.time()]
 print(len(mp.bit),len(mp.bit[0]))
 # mp.bit
 mbt=0
+tck=0
 while True:
-        scrn.fill((200,200,200))
-        # mbt=1
-        for i in pygame.event.get():
-            if i.type == pygame.QUIT:
-                quit()
-            elif i.type==pygame.KEYDOWN:
-                if i.key==pygame.K_SPACE:
-                    kd=True
-            elif i.type==pygame.MOUSEBUTTONDOWN:
-                mbt=i.button
-            #DONT DELETE
-            # if i.key==py.K_LSHIFT:# and br.ys<3:
-            #     br.ys+=1
-        keys=pygame.key.get_pressed()
-        do=""
-        if time.time()-po[1]>0.1:
-            if keys[up]or keys[w]:
-                do="z"
-            elif keys[right]or keys[d]:
-                do="x"
-            elif keys[down]or keys[s]:
-                do="c"
-            elif keys[left]or keys[a]:
-                do="v"
-            elif keys[save]:
-                do="]"
-                writSave()
-            elif keys[place]or mbt==3:
-                mbt=0
-                do="p"
-            elif keys[brek]or mbt==1:
-                mbt=0
-                do="b"
-            elif keys[inv]:
-                do="i"
-            elif keys[openChest]:
-                do="o"
-            elif keys[k1]:
-                do="1"
-            elif keys[k2]:
-                do="2"
-            elif keys[k3]:
-                do="3"
-            elif keys[k4]:
-                do="4"
-            elif keys[k5]:
-                do="5"
-            if do==po[0] and po[0]!="" and time.time()-po[1]<1:
-                do="b"
-            po=[do,time.time()]
-        p.mover(do)
-        # print(do)
-        # sleep(0.1)
-        clk.tick(60)
-        for i in bobs:
-            i.run(mp.bit,[],p)
-        pr(p.x,p.y)
-        # scrn.blit(font.render(f"{mbt},", True, (2,0,0)),(0,0))
-        pygame.display.flip()
-while not True:
-    fps.run()
-    prat("fps: "+str(fps.getCur())+"          ",1,12)
-    # if dpt.run():
+    scrn.fill((200,200,200))
+    # mbt=1
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:
+            quit()
+        elif i.type==pygame.KEYDOWN:
+            if i.key==pygame.K_SPACE:
+                kd=True
+        elif i.type==pygame.MOUSEBUTTONDOWN:
+            mbt=i.button
+        #DONT DELETE
+        # if i.key==py.K_LSHIFT:# and br.ys<3:
+        #     br.ys+=1
+    keys=pygame.key.get_pressed()
+    do=""
+    if time.time()-po[1]>0.3:
+        if keys[up]or keys[w]:
+            do="z"
+        elif keys[right]or keys[d]:
+            do="x"
+        elif keys[down]or keys[s]:
+            do="c"
+        elif keys[left]or keys[a]:
+            do="v"
+        elif keys[save]:
+            do="]"
+            writSave()
+        elif keys[place]or mbt==3:
+            mbt=0
+            do="p"
+        elif keys[brek]or mbt==1:
+            mbt=0
+            do="b"
+        elif keys[inv]:
+            do="i"
+        elif keys[openChest]:
+            do="o"
+        elif keys[k1]:
+            do="1"
+        elif keys[k2]:
+            do="2"
+        elif keys[k3]:
+            do="3"
+        elif keys[k4]:
+            do="4"
+        elif keys[k5]:
+            do="5"
+        elif keys[space]:
+            do="atk"
+        if do==po[0] and po[0]!="" and time.time()-po[1]<0.5 and do in"zxcv":
+            do="b"
+        po=[do,time.time()]
+    p.mover(do)
+    # print(do)
+    # sleep(0.1)
+    clk.tick(50)
+    tck+=1
     for i in bobs:
         i.run(mp.bit,[],p)
-    p.mover(do)
-    # move(0,12)
-    # if rkt.run():
-    sleep(0.1)
-    #wasd/arrow-move
-    #u-save
-    #p-place
-    #b-break
-    #i-inve
-    #o-open chest
-    prat("Use arrow keys and wasd  to move. \"i\" to open your inventory. \"o\" to open the chest in front of you. \"u\" to save. \"b\" breaks the block in front of you, along with holding down an arrow key. Use number keys 1-5 to change your selected hotbar. \"p\" places the current selected block in front of you. \"o\" opens a chest in front of you.",1,13)
-    print(m)
-    do=keyboard.read_key()
-    if do=="":
-        continue
-    if do=="t":
-        texter()
-        continue
-    t2=time.time()
-    if t2-ts<7 and do==pk[-1]:
-        if pk[-2]==pk[-3] and pk[-4]==do:# and pk[-3]==pk[-4]
-            do="b"
-        else:
-            pk.append(do)
-            continue
-    pk.append(do)
-    if dev:
-        prat(str(t2-ts)+str(randint(0,10)),1,16)
-    ts=t2
-    prat(do,1,15)
-    
-    if do == "up" or do == "w":
-        do="z"
-    elif do == "right" or do == "d":
-        do="x"
-    elif do == "down" or do == "s":
-        do="c"
-    elif do == "left" or do == "a":
-        do="v"
-    elif do=="u":
-        writSave()
+    pr(p.x,p.y)
+    # scrn.blit(font.render(f"{mbt},", True, (2,0,0)),(0,0))
+    pygame.display.flip()
+    if tck/50>randint(10,15):
+        tck=0
+        print("HYE",tck)
+        works=True
+        while works:
+            b=randint(0,len(mp.bit)-1)
+            a=randint(0,len(mp.bit[b])-1)
+            if mp.bit[b][a]==0:
+                bobs.append(choice(boblst)(a,b))
+                works=False
     
