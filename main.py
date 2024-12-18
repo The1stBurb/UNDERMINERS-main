@@ -920,6 +920,15 @@ dth_mes=["You are ded",
         "Have you tried turning yourself off and on again? No? Well, the game just did it for you.",
         "To die, or not to die - that was the question. Seems like you've found the answer.",
         "I'll be back... and so will you, after you hit that retry button!",
+        "Congratulations! You've reached your daily goal of 10,000 deaths. Time to celebrate with a respawn!",
+        "Your defeat has gone viral! #GameOverFail is trending. Care to add another to your highlight reel?",
+        "You didn't lose. The game is clearly rigged by the secret society of unbeatable NPCs. Or maybe you just need more practice.",
+        "The sound of one player failing. What is the noise of your defeat? Meditate on this as you restart.",
+        "Alas, poor player! I knew them well, a fellow of infinite jest, of most excellent fancy. Until they walked off that cliff.",
+        "Your game has encountered an unexpected success in failing. We're pivoting to a new strategy called 'trying again'.",
+        "In an alternate universe, you survived. Unfortunately, this isn't that universe. Care to test another reality?",
+        "Your soufflé of success has fallen flat. Time to whip up a new batch of determination!",
+        "And here we observe the rare species 'Playerus Deceasedus' in its natural habitat: the game over screen.",
         ]
 mes=choice(dth_mes)
 dth_mes.remove(mes)
