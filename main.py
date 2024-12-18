@@ -540,6 +540,8 @@ class plr:
             text("EXIT",900,900)
             rect(650,0,50,20,col=(200,200,200))
             text("MOVE",652,2)
+            rect(650,60,55,20,col=(200,200,200))
+            text("CRAFT",652,62)
             rect(650,30,60,20,col=(200,200,200))
             text("COLOUR",652,32)
             # text(f"{ms.x},{ms.y},{int(ms.x/110)},{int(ms.y/110)}",0,900)
@@ -552,6 +554,9 @@ class plr:
                 return
             elif ms.x>650 and ms.x<700 and ms.y>30 and ms.y<50 and x1!=-1 and y1!=-1:
                 self.colourify(x1,y1)
+                x1=y1=-1
+            elif ms.x>650 and ms.x<700 and ms.y>60 and ms.y<80 and x1!=-1 and y1!=-1:
+                # self.craft(x1,y1)
                 x1=y1=-1
             elif ms.x<650 and ms.y<750 and ms.x>0 and ms.y>0:
                 x,y=int(ms.x/110),int(ms.y/110)
@@ -651,9 +656,12 @@ class plr:
                 return
             pygame.display.flip()
             ms.x,ms.y=-1,-1
+        
 p=plr()
 
 mp=MP()
+def resize(img,w,h):
+    return pygame.transform.scale(img,(w,h))
 def rot90(img,r=-1):
     if r==-1:
         r=randint(0,3)*90
@@ -675,6 +683,7 @@ bobcks=[
 [pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),],
 [pygame.transform.scale(pygame.image.load("images\\Spagler\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\left.png").convert_alpha(),(sz,sz)),],
 [pygame.transform.scale(pygame.image.load("images\\Phuflee\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\left.png").convert_alpha(),(sz,sz)),],
+[pygame.transform.scale(pygame.image.load("images\\Jeremy\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Jeremy\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Jeremy\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Jeremy\\left.png").convert_alpha(),(sz,sz)),],
 ]
 rocck=pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz))
 ore=pygame.transform.scale(pygame.image.load("images\\ore_spots.png").convert_alpha(),(sz,sz))
@@ -738,7 +747,7 @@ def writSave():
         sv.close()
         del sv
     print("SAVED")
-if not True:#intput("Get a new game, or use your old save? (new/old)")=="new":
+if True:#intput("Get a new game, or use your old save? (new/old)")=="new":
     writSave()
 else:
     getSave()
@@ -766,17 +775,20 @@ print(len(mp.bit),len(mp.bit[0]))
 # mp.bit
 mbt=0
 tck=0
+clickclack=[]
 while True:
     scrn.fill((200,200,200))
     # mbt=1
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
+            print(clickclack)
             quit()
         elif i.type==pygame.KEYDOWN:
             if i.key==pygame.K_SPACE:
                 kd=True
         elif i.type==pygame.MOUSEBUTTONDOWN:
             mbt=i.button
+            clickclack.append(pygame.mouse.get_pos())
         #DONT DELETE
         # if i.key==py.K_LSHIFT:# and br.ys<3:
         #     br.ys+=1
@@ -827,6 +839,20 @@ while True:
     for i in bobs:
         i.run(mp.bit,[],p)
     pr(p.x,p.y)
+    for i in [(269, 263), (231, 263), (231, 263), (231, 263)]:
+        rect(i[0],i[1],5,5)
+    # x=(269 if p.dir==1 or p.dir==2 else 231)
+    # if p.dir==1 or p.dir==2:
+    #     if p.hnd().tp in nts:
+    #         if p.hnd().tp.nm=="void":
+    #             scrn.blit(resize(colorize(vbrcck,p.hnd().tp.col),20,20),(x-7,263-7))    
+    #         else:
+    #             scrn.blit(resize(colorize(brcck,p.hnd().tp.col),20,20),(x-7,263-7))
+    #     elif p.hnd().tp in hts:
+    #         if p.hnd().tp.tp=="pick":
+    #             scrn.blit(resize(colorize(picck,p.hnd().tp.col),20,20),(x-5,263-15))
+    #         elif p.hnd().tp.tp=="sword":
+    #             scrn.blit(resize(colorize(swrocc,p.hnd().tp.col),20,20),(x-5,263-15))
     # scrn.blit(font.render(f"{mbt},", True, (2,0,0)),(0,0))
     pygame.display.flip()
     if tck/50>5:#randint(10,15):

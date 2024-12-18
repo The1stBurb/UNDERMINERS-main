@@ -73,7 +73,7 @@ no_rock=no_rock52("no_rock"," ",10,0,"air",0,col=(200,200,200))
 placed_rock=placed_rock52("placed_rock","_",0,1,"placed rock",1,col=(211,211,211))
 rock=rock52("rock","%",-1,2,"rock",1,col=(100,100,100))#◻
 dark_rock=dark_rock52("dark_rock","$",2,3,"dark rock",2,col=(27,27,27))#█
-charium_ore=charium_ore52("charium_ore","=",7,4,"ch-arh-ee-um ore",3,col=(0,100,0))#≈
+charium_ore=charium_ore52("charium_ore","=",7,4,"ch-arh-ee-um ore",2,col=(0,100,0))#≈
 nevelium_ore=nevelium_ore52("nevelium_ore","o",5,5,"neh-vel-ee-um ore",3,col=(0,0,139))#
 decante_ore=decante_ore52("decante_ore","⋇",3,6,"dee-cant ore",4,col=(128,128,0))
 charcor_ore=charcor_ore52("charcor_ore","&",10,7,"ch-arh-kor ore",1,col=(139,0,0))#◘
@@ -155,7 +155,8 @@ class nevelium_sword52(held):
         self.tp="sword"
 pick=pick52("pick",0,1,1)
 charcor_pick=charcor_pick52("charcor_pick",1,2,1)
-nevelium_pick=nevelium_pick52("nevelium_pick",2,3,2)
+charium_pick=charium_pick52("charium_pick",7,3,2)
+nevelium_pick=nevelium_pick52("nevelium_pick",2,5,2)
 burb=pick52("burb",-1,10,10)
 sword=sword52("sword",3,0,3)
 charcor_sword=charcor_sword52("charcor_sword",4,0,5)

@@ -242,10 +242,13 @@ def spagler(x,y):
     return bob(x,y,"Spagler",1,3,2)
 def phuflee(x,y):
     return bob(x,y,"Phuflee",2,1,0.3)
+def jeremy(x,y):
+    return bob(x,y,"Jeremy",3,0.1,0.1)
 boblst=[
     gloop,
     spagler,
     phuflee,
+    jeremy,
 ]
 bobs=[]
 # for i in range(0,360,6):
