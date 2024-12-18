@@ -929,6 +929,10 @@ dth_mes=["You are ded",
         "In an alternate universe, you survived. Unfortunately, this isn't that universe. Care to test another reality?",
         "Your soufflé of success has fallen flat. Time to whip up a new batch of determination!",
         "And here we observe the rare species 'Playerus Deceasedus' in its natural habitat: the game over screen.",
+        "Did you forgot to read the 'Do Not Die' sign.",
+        "And now your taking an unscheduled nap.",
+        "You zigged when you should have zagged",
+        "And..., you forgot to renew their subscription to life",
         ]
 mes=choice(dth_mes)
 dth_mes.remove(mes)
