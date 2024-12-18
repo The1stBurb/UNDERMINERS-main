@@ -120,14 +120,16 @@ def solve_maze(maze, start, end):
     return None
 
 class bob:
-    def __init__(self,x,y,nm,tp,atk,sp):
+    def __init__(self,x,y,nm,tp,atk,sp,hp,close=5):
         self.nm,self.tp,self.atk,self.sp,self.x,self.y=nm,tp,atk,sp,x,y
         self.s,self.t,self.path=0,xny(self.x,self.y),[]
         self.avp=[]
         self.dir=2
         self.step=0
         self.ar,self.arr=0,sp
-        self.hp=1
+        self.hp=hp+randint(-1,1)
+        self.close=close
+        self.dmgtk=True
     def disp(self,d):
         prat(" ",self.x+1,self.y+1)#nots[mapd[self.y][self.x]]
         print()
@@ -181,10 +183,11 @@ class bob:
     def run(self,mapd,nots,pr):
         # self.path = pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)#navigate_maze(mapd,(self.x,self.y),(self.t.x,self.t.y))#
         self.ar-=0.05
-        if (abs(self.x-pr.x)<1 and abs(self.y-pr.y)<1)and self.ar<0:
-            print("atk")
+        if (abs(self.x-pr.x)<2 and abs(self.y-pr.y)<2)and self.ar<0:
+            # print("atk")
             pr.hp-=self.atk
             self.ar=self.arr
+            pr.dmgtk=True
         if randint(0,40)==0 and self.t.x!=pr.x and self.t.y!=pr.y:
             self.t.x,self.t.y=(pr.x,pr.y)
             self.path = solve_maze(mapd,(self.y,self.x),(self.t.y,self.t.x))#pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
@@ -203,7 +206,13 @@ class bob:
                     self.dir=0
                 elif d[0]>self.y:
                     self.dir=2
-                self.y,self.x=d
+                if self.close==10:
+                    if (abs(self.x-pr.x)<2 and abs(self.y-pr.y)<2):
+                        self.dir=1
+                    else:
+                        self.dir=0
+                if self.close!=10:
+                    self.y,self.x=d
                 self.path.remove(self.path[0])
                 self.step=0
                 # self.step+=1
@@ -213,42 +222,22 @@ class bob:
             self.path = solve_maze(mapd,(self.y,self.x),(self.t.y,self.t.x))#pth.find_path((self.x,self.y), (pr.x,pr.y),mapd)
             self.step=0
             pass
-            # print(self.path)
-            # print("No path found to target")
-        # if self.avp==[]:
-        #     for a,i in enumerate(mapd):
-        #         for b,j in enumerate(i):
-        #             if j==0:
-        #                 self.avp.append((b,a))
-        # # if int(self.x/10)==int(pr.x/10) and int(self.y/10)==int(pr.y/10):
-        # #     self.disp((self.y,self.x))
-        # self.s+=1
-        # if self.path!=None and len(self.path)<=1:#dist(self.x,self.y,self.t.x,self.t.y)
-        #     self.t.x,self.t.y=-1,-1
-        #     # prat("as",0,17)
-        #     self.getTarget(pr,mapd)
-        # if self.s>self.sp:
-        #     # prat(str(len(self.path if self.path!=None else []))+" "*50,0,21)
-        #     self.s=0
-        #     dec=self.mve(mapd,nots,pr)
-        #     # self.disp((self.y,self.x))
-        #     if dec=="newPath":
-        #         self.getTarget(pr,mapd)
-# trol=bob(2,9,"Troll","N",2,1)
-# trol2=bob(3,9,"Toll","N",2,3)
 def gloop(x,y):
-    return bob(x,y,"Gelatinous Gloop",0,2,1)
+    return bob(x,y,"Gelatinous Gloop",0,2,1,5)
 def spagler(x,y):
-    return bob(x,y,"Spagler",1,3,2)
+    return bob(x,y,"Spagler",1,3,2,3)
 def phuflee(x,y):
-    return bob(x,y,"Phuflee",2,1,0.3)
+    return bob(x,y,"Phuflee",2,1,0.3,2)
 def jeremy(x,y):
-    return bob(x,y,"Jeremy",3,0.1,0.1)
+    return bob(x,y,"Jeremy",3,0.1,0.1,4)
+def detrinium(x,y):
+    return bob(x,y,"Detrinium",4,5,2,10,close=10)
 boblst=[
     gloop,
     spagler,
     phuflee,
     jeremy,
+    detrinium,
 ]
 bobs=[]
 # for i in range(0,360,6):

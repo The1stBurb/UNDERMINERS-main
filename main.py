@@ -389,6 +389,7 @@ class plr:
         self.atk=1
         self.atkr=0
         self.ar=5
+        self.dmgtk=False
         self.hold=[
             [itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
             [itm(pick,1),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],]
@@ -401,7 +402,11 @@ class plr:
         # quad(xs,ys,xs+10+self.hp*hl,ys,xs+self.hp*hl,ys+20,xs,ys+20,col=((0,0,0)if self.hp<hl else (0,255,0)))
         rect(0,ys,self.hp*hl,20,col=(0,255,0))
         text(f"Hp: {int(self.hp/self.mhp*100)}%",0,ys)
-        scrn.blit(self.us[self.dir],(4.5*sz,4.5*sz))
+        if self.dmgtk:
+            scrn.blit(colorize(self.us[self.dir],(255,0,0)),(4.5*sz,4.5*sz))
+            self.dmgtk=False
+        else:
+            scrn.blit(self.us[self.dir],(4.5*sz,4.5*sz))
         rect(self.hl*110,900,110,100,col=(100,100,100))
         for a,i in enumerate(self.hold[5]):
             if i.tp in nts:
@@ -443,8 +448,9 @@ class plr:
                 self.atkr=0
                 # print("ouch")
                 for i in bobs:
-                    if (abs(i.x-self.x)<2 and abs(i.y-self.y)<2):
+                    if (abs(i.x-self.x)<3 and abs(i.y-self.y)<3):
                         i.hp-=self.atk+self.hnd().tp.atk
+                        i.dmgtk=True
                         # print("bonk")
             return
         elif d.isdigit() and inr(int(d)-1,0,5):
@@ -680,10 +686,30 @@ picck = pygame.transform.scale(pygame.image.load("images\\pick_base.png").conver
 swrocc=pygame.transform.scale(pygame.image.load("images\\sword_base.png").convert_alpha(),(60,60))
 # bobck=pygame.transform.scale(pygame.image.load("images\\guy_down.png").convert_alpha(),(sz,sz))
 bobcks=[
-[pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),],
-[pygame.transform.scale(pygame.image.load("images\\Spagler\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Spagler\\left.png").convert_alpha(),(sz,sz)),],
-[pygame.transform.scale(pygame.image.load("images\\Phuflee\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Phuflee\\left.png").convert_alpha(),(sz,sz)),],
-[pygame.transform.scale(pygame.image.load("images\\Jeremy\\up.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Jeremy\\right.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Jeremy\\down.png").convert_alpha(),(sz,sz)),pygame.transform.scale(pygame.image.load("images\\Jeremy\\left.png").convert_alpha(),(sz,sz)),],
+    [pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\up.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\right.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\down.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Green_Gloop\\left.png").convert_alpha(),(sz,sz)),],
+
+    [pygame.transform.scale(pygame.image.load("images\\Spagler\\up.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Spagler\\right.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Spagler\\down.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Spagler\\left.png").convert_alpha(),(sz,sz)),],
+
+    [pygame.transform.scale(pygame.image.load("images\\Phuflee\\up.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Phuflee\\right.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Phuflee\\down.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Phuflee\\left.png").convert_alpha(),(sz,sz)),],
+
+    [pygame.transform.scale(pygame.image.load("images\\Jeremy\\up.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Jeremy\\right.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Jeremy\\down.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\Jeremy\\left.png").convert_alpha(),(sz,sz)),],
+
+    [colorize(pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz)),rock.col),
+     colorize(pygame.transform.scale(pygame.image.load("images\\Detrinium\\up.png").convert_alpha(),(sz,sz)),rock.col),
+     pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz)),
+     pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz)),],
 ]
 rocck=pygame.transform.scale(pygame.image.load("images\\rock_base.png").convert_alpha(),(sz,sz))
 ore=pygame.transform.scale(pygame.image.load("images\\ore_spots.png").convert_alpha(),(sz,sz))
@@ -722,7 +748,11 @@ def pr(x,y):
     p.dr(p.x,p.y)
     ktp=[]
     for i in bobs:
-        scrn.blit(bobcks[i.tp][i.dir],(i.x*sz-dx,i.y*sz-dy))
+        if i.dmgtk:
+            i.dmgtk=False
+            scrn.blit(colorize(bobcks[i.tp][i.dir],(255,0,0)),(i.x*sz-dx,i.y*sz-dy))
+        else:
+            scrn.blit(bobcks[i.tp][i.dir],(i.x*sz-dx,i.y*sz-dy))
         if not i.hp>0:
             bobs.remove(i)
         # i.disp((i.y,i.x))
@@ -776,19 +806,22 @@ print(len(mp.bit),len(mp.bit[0]))
 mbt=0
 tck=0
 clickclack=[]
+dmgtk=0
 while True:
+    if p.hp<=0:
+        break
     scrn.fill((200,200,200))
     # mbt=1
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
-            print(clickclack)
+            # print(clickclack)
             quit()
         elif i.type==pygame.KEYDOWN:
             if i.key==pygame.K_SPACE:
                 kd=True
         elif i.type==pygame.MOUSEBUTTONDOWN:
             mbt=i.button
-            clickclack.append(pygame.mouse.get_pos())
+            # clickclack.append(pygame.mouse.get_pos())
         #DONT DELETE
         # if i.key==py.K_LSHIFT:# and br.ys<3:
         #     br.ys+=1
@@ -832,28 +865,11 @@ while True:
             do="b"
         po=[do,time.time()]
     p.mover(do)
-    # print(do)
-    # sleep(0.1)
     clk.tick(50)
     tck+=1
     for i in bobs:
         i.run(mp.bit,[],p)
     pr(p.x,p.y)
-    for i in [(269, 263), (231, 263), (231, 263), (231, 263)]:
-        rect(i[0],i[1],5,5)
-    # x=(269 if p.dir==1 or p.dir==2 else 231)
-    # if p.dir==1 or p.dir==2:
-    #     if p.hnd().tp in nts:
-    #         if p.hnd().tp.nm=="void":
-    #             scrn.blit(resize(colorize(vbrcck,p.hnd().tp.col),20,20),(x-7,263-7))    
-    #         else:
-    #             scrn.blit(resize(colorize(brcck,p.hnd().tp.col),20,20),(x-7,263-7))
-    #     elif p.hnd().tp in hts:
-    #         if p.hnd().tp.tp=="pick":
-    #             scrn.blit(resize(colorize(picck,p.hnd().tp.col),20,20),(x-5,263-15))
-    #         elif p.hnd().tp.tp=="sword":
-    #             scrn.blit(resize(colorize(swrocc,p.hnd().tp.col),20,20),(x-5,263-15))
-    # scrn.blit(font.render(f"{mbt},", True, (2,0,0)),(0,0))
     pygame.display.flip()
     if tck/50>5:#randint(10,15):
         tck=0
@@ -865,4 +881,37 @@ while True:
             if mp.bit[b][a]==0:
                 bobs.append(choice(boblst)(a,b))
                 works=False
-    
+# font = pygame.font.Font('Middlecase-Regular.ttf', 20)
+dth_mes=["You are ded",
+        "You died",
+        "You became a wee bit more dead than deadish",
+        "You have found out whats afterlife",
+        "Im so sorry for your loss","l",
+        "womp womp",
+        "You have met an untimely end! Better luck next time... or maybe just avoid the lava",
+        "In the face of overwhelming odds, you fought valiantly. But even heroes must fall. Rest now, \"brave\" warrior.",
+        "The shadows have claimed another soul. Your journey ends here, but the echoes of your deeds will linger in the realm. I'm not sure if thats a good thing tho",
+        "Mate, I'm very much not even chuffed to bits at all with that performance. It was only a wee bit of impressive cause of how you died",
+        "Oops! You tripped over your own feet and fell into oblivion. Don’t worry, it happens to the best of us—try again!",
+        "Error 404: Player Not Found. Your consciousness has been uploaded to the cloud. Rebooting in 3... 2... 1...",
+        "Congratulations! You've discovered a new way to lose. The game developers are both impressed and concerned.",
+        "As the curtain falls on your final act, remember: in the game of life and pixels, everyone's battery eventually runs out.",
+        "They say failure is the best teacher. By that logic, you're well on your way to becoming a genius! Try again, champ!",
+        "Game over! You've been served a hot plate of defeat with a side of 'git gud'. Care for seconds?",
+        "Et tu, Brute? Betrayed by your own reflexes. Caesar would understand.",
+        "Forecast for your game: 100% chance of failure with scattered respawns throughout the afternoon.",
+        "Have you tried turning yourself off and on again? No? Well, the game just did it for you.",
+        "To die, or not to die - that was the question. Seems like you've found the answer.",
+        "I'll be back... and so will you, after you hit that retry button!",
+        ]
+mes=choice(dth_mes)
+while True:
+    scrn.fill((255,255,255))
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:
+            # print(clickclack)
+            quit()
+        if i.type==pygame.MOUSEBUTTONDOWN:
+            mes=choice(dth_mes)
+    text(mes,0,Y/2)
+    pygame.display.flip()
