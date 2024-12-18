@@ -905,6 +905,7 @@ dth_mes=["You are ded",
         "I'll be back... and so will you, after you hit that retry button!",
         ]
 mes=choice(dth_mes)
+dth_mes.remove(mes)
 while True:
     scrn.fill((255,255,255))
     for i in pygame.event.get():
@@ -912,6 +913,9 @@ while True:
             # print(clickclack)
             quit()
         if i.type==pygame.MOUSEBUTTONDOWN:
+            if len(dth_mes)==0:
+                quit()
             mes=choice(dth_mes)
+            dth_mes.remove(mes)
     text(mes,0,Y/2)
     pygame.display.flip()
