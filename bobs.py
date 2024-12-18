@@ -240,38 +240,3 @@ boblst=[
     detrinium,
 ]
 bobs=[]
-# for i in range(0,360,6):
-#     prat(f"{i},{sin(i)}",10,10)
-#     prat("@",int(10+sin(i)*5),int(10+cos(i)*5))
-
-# # Example usage
-# mp = [
-#     [0, 1, 0, 0, 0],
-#     [0, 1, 0, 1, 0],
-#     [0, 0, 0, 1, 0],
-#     [0, 1, 1, 1, 0],
-#     [0, 0, 0, 1, 0]
-# ]
-
-# start = (0, 0)
-# end = (4, 4)
-
-# path = navigate_maze(mp, start, end)
-
-# # if path:
-# #     print("Path found:", path)
-# # else:
-# #     print("No path found")
-
-# # Visualize the path
-# if path:
-#     for i, row in enumerate(mp):
-#         for j, cell in enumerate(row):
-#             if (i, j) in path:
-#                 print("*", end=" ")
-#             else:
-#                 print(cell, end=" ")
-#         print()
-# while True:
-#     trol.run()
-#     sleep(0.1)
