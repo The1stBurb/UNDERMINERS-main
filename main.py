@@ -388,7 +388,7 @@ class plr:
         self.hp=self.mhp
         self.atk=1
         self.atkr=0
-        self.ar=5
+        self.ar=1
         self.dmgtk=False
         self.hold=[
             [itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],[itm(void,0),itm(void,0),itm(void,0),itm(void,0),itm(void,0),],
@@ -798,7 +798,7 @@ def texter():
         prat(pk[-1],len(pk)-9,1)
         print("")
 dev=False
-up,right,down,left,save,w,a,s,d,place,brek,inv,openChest,space=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o,pygame.K_SPACE
+up,right,down,left,save,w,a_key,s,d,place,brek,inv,openChest,space=pygame.K_UP,pygame.K_RIGHT,pygame.K_DOWN,pygame.K_LEFT,pygame.K_u,pygame.K_w,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_p,pygame.K_b,pygame.K_i,pygame.K_o,pygame.K_SPACE
 k1,k2,k3,k4,k5=pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5
 po=["",time.time()]
 print(len(mp.bit),len(mp.bit[0]))
@@ -807,6 +807,23 @@ mbt=0
 tck=0
 clickclack=[]
 dmgtk=0
+status=True
+while status:
+    scrn.fill((255,255,255))
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:
+            # print(clickclack)
+            quit()
+        if i.type==pygame.MOUSEBUTTONDOWN:
+            status=False
+    text("\"i\" to open inventory",0,0)
+    text("\"o\" to open chest",0,20)
+    text("\"p\" to place",0,40)
+    text("\"b\" to break",0,60)
+    text("1-5 to chnage held item",0,80)
+    text("wasd and arrow keys to move",0,100)
+    text("Press mouse to move on",0,120)
+    pygame.display.flip()
 while True:
     if p.hp<=0:
         break
@@ -834,7 +851,7 @@ while True:
             do="x"
         elif keys[down]or keys[s]:
             do="c"
-        elif keys[left]or keys[a]:
+        elif keys[left]or keys[a_key]:
             do="v"
         elif keys[save]:
             do="]"
@@ -873,7 +890,7 @@ while True:
     pygame.display.flip()
     if tck/50>5:#randint(10,15):
         tck=0
-        print("HYE",tck)
+        # print("HYE",tck)
         works=True
         while works:
             b=randint(0,len(mp.bit)-1)
@@ -919,3 +936,59 @@ while True:
             dth_mes.remove(mes)
     text(mes,0,Y/2)
     pygame.display.flip()
+
+
+
+
+
+
+"""
+wasd/arrow keys move
+b to break
+p to place
+space to attack
+1-5 to move inv
+i to ope inventory
+o to open chest
+
+
+
+
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^READ^^^^^^^^^^
+
+"""
